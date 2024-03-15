@@ -45,7 +45,7 @@ var vuedata = {
   travelFilter: 'all',
   charts: {
     level: {
-      title: 'MINISTERIAL2 LEVEL',
+      title: 'MINISTERIAL LEVEL',
       info: 'This pie chart shows the proportion of meetings hosted by the level of Ministerial office. Click on the pie chart to filter the rest of the tool by the level of Ministerial office.'
     },
     department: {
