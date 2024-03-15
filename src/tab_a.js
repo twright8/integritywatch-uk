@@ -45,7 +45,7 @@ var vuedata = {
   travelFilter: 'all',
   charts: {
     level: {
-      title: 'MINISTERIAL LEVEL',
+      title: 'MINISTERIAL2 LEVEL',
       info: 'This pie chart shows the proportion of meetings hosted by the level of Ministerial office. Click on the pie chart to filter the rest of the tool by the level of Ministerial office.'
     },
     department: {
@@ -503,8 +503,9 @@ switch (tagState) {
     chart.render();
   }
 
-  //CHART 2
-  var createDepartmentChart = function() {
+
+  //CHART 2 Revised with Filtering and Limiting to 10 Maximum
+var createDepartmentChart = function() {
     var chart = charts.department.chart;
     var dimension = ndx.dimension(function (d) {
       return d.department; 
@@ -512,14 +513,27 @@ switch (tagState) {
     var group = dimension.group().reduceSum(function (d) {
         return 1;
     });
+
+    // Filtering to exclude departments with no records and limit to top 10
+    var filteredGroup = (function(source_group) {
+      return {
+        all: function() {
+          return source_group.all().filter(function(d) {
+            return (d.value != 0);
+          }).sort(function(a, b) {
+            return b.value - a.value; // Sort by value in descending order
+          }).slice(0, 10); // Take only the top 10
+        }
+      };
+    })(group);
+
     var width = recalcWidth(charts.department.divId);
     var charsLength = recalcCharsLength(width);
     chart
       .width(width)
       .height(420)
-      .cap(10)
       .margins({top: 0, left: 0, right: 0, bottom: 20})
-      .group(group)
+      .group(filteredGroup) // Use the filtered and limited group
       .dimension(dimension)
       .colorCalculator(function(d, i) {
         return vuedata.colors.default;
@@ -535,9 +549,9 @@ switch (tagState) {
       })
       .elasticX(true)
       .xAxis().ticks(4);
-      //chart.xAxis().tickFormat(numberFormat);
       chart.render();
-  }
+}
+
 
   //CHART 3
   var createHostsChart = function() {
