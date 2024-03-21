@@ -290,8 +290,12 @@ for ( var i = 0; i < 5; i++ ) {
 }
 //Load data and generate charts
 var lobbyist_typeList = {}
+  var downloadStart = performance.now();
+
 csv('./data/iw_uk.csv?' + randomPar, (err, events) => {
 csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
+	
+
   var parseDate = d3.timeParse("%d/%m/%Y");
   var now = Date.now();
   //var RecordId = 0;
@@ -305,7 +309,7 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
     if(d.date != ""){
       d.date = parseDate(d.date);
     }
-    d.policy_level = d.policy_level.trim();
+    d.policy_level = d.policy_level.trim	();
     d.portfolio = '';
     d.ministerialLevel = "Others";
     switch(d.policy_level) {
@@ -360,6 +364,10 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
 
   //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
   var ndx = crossfilter(events);
+              var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("data load: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
   // Initialize Crossfilter with your dataset
 
   var searchDimension = ndx.dimension(function (d) {
@@ -373,6 +381,7 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
 		return d.date;
 	});
 	
+
 // Assuming this is placed inside your CSV loading callback, after initializing your crossfilter `ndx`
 function exportFilteredData() {
     // Assuming 'ndx' is your crossfilter instance
@@ -538,6 +547,7 @@ filters.forEach(filter => {
 
   document.getElementById('filter-buttons').appendChild(button);
 });
+
 
 //chart 1
   var createLevelChart = function() {
@@ -746,8 +756,7 @@ var createDepartmentChart = function() {
     chart.size(recalcWidthWordcloud());
     chart.render();
   }
-  
-  
+
   //TABLE
   var createTable = function() {
     var count=0;
@@ -1041,14 +1050,44 @@ $('.reset-btn').click(function(){
     });
   });
 
-  
+  var downloadStart = performance.now();
+
   //Render charts
   createLevelChart();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("Download time level: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+
   createDepartmentChart();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("department timze: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+
   createHostsChart();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("Download hosts: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+
   createOrganizationsChart();
-  createWordcloudChart();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("Download orgs: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+
+ createWordcloudChart();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("word timze: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+
   createTable();
+            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("table timze: " + downloadTime + " milliseconds");
+
 
   $('.dataTables_wrapper').append($('.dataTables_length'));
 
