@@ -54,11 +54,11 @@ var vuedata = {
     },
     hosts: {
       title: 'TOP 10 HOSTS',
-      info: 'This bar chart shows the Ministers who have had the most contact with lobby organisations. When Ministers meet several lobby organisations in a single meeting, the tool counts each contact separately. The number of contacts can therefore be higher than the number of meetings. Click on the bar chart to filter the rest of the tool by Minister.'
+      info: 'This bar chart shows the Ministers who have had the most contact with lobby organisations. When Ministers meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts can therefore be higher than the number of meetings diplayed on this portal. Click on the bar chart to filter the rest of the tool by Minister.'
     },
     organizations: {
       title: 'Top 10 Lobbyists',
-      info: 'This bar chart shows the lobby organisations who have had the most contact with Ministers. When Ministers meet several lobby organisations in a single meeting, the tool counts each contact separately. The number of contacts can therefore be higher than the number of meetings. Click on the bar chart to filter the rest of the tool by lobby organisation.'
+      info: 'This bar chart shows the lobby organisations who have had the most contact with Ministers. When Ministers meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts can therefore be higher than the number of meetings diplayed on this portal.  Click on the bar chart to filter the rest of the tool by lobby organisation.'
     },
     subject: {
       title: 'Subjects of lobby meetings',
@@ -68,7 +68,7 @@ var vuedata = {
       chart: null,
       type: 'table',
       title: 'Table',
-      info: ''
+      info: 'This table presents a curated list of meetings filtered based on your selections. Use the filters above to refine the view according to meeting date, department, policy level, and other criteria.'
     }
   },
   selectedElement: { "P": "", "Sub": ""},
@@ -324,6 +324,9 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
       case 'Parliamentary Under-Secretary':
         d.ministerialLevel = 'Parliamentary Under-Secretary';
         break;
+	  case 'First Minister':
+        d.ministerialLevel = 'First Minister';
+        break;
       default:
         d.ministerialLevel = "Others";
     };
@@ -369,6 +372,39 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
 		}
 		return d.date;
 	});
+	
+// Assuming this is placed inside your CSV loading callback, after initializing your crossfilter `ndx`
+function exportFilteredData() {
+    // Assuming 'ndx' is your crossfilter instance
+    var allFilteredData = ndx.allFiltered(); // This retrieves all records that match the current filters
+
+    // Convert the filtered data to CSV format
+    const csvRows = [];
+    const headers = Object.keys(allFilteredData[0]);
+    csvRows.push(headers.join(',')); // Add header row
+
+    allFilteredData.forEach(row => {
+        const values = headers.map(header => JSON.stringify(row[header]));
+        csvRows.push(values.join(','));
+    });
+
+    const csvData = csvRows.join('\n');
+
+    // Trigger download
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", 'filtered-data.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Example: Bind the export function to a button click event
+document.getElementById('exportButton').addEventListener('click', exportFilteredData);
+
 // Assuming ndx is your Crossfilter instance and is already defined and initialized
 // with your dataset somewhere in your script before this code block.
 
@@ -383,90 +419,129 @@ var sourceDimension = ndx.dimension(function (d) {
     // Add event listener to your button
 document.getElementById('filter-source-button').addEventListener('click', function () {
   var button = this;
-  button.disabled = true; // Disable button
-  //button.querySelector('.loading-donut').hidden = false; // Show loading donut
+  button.disabled = true; // Disable the button to prevent further clicks
+  button.style.fontWeight = 'bold';
+  button.style.textTransform = 'uppercase'; 
+  // Show the loader at the very next frame
+  requestAnimationFrame(() => {
+    vuedata.loader = true; // Attempt to show loader immediately
+    
+    // Defer the rest of the logic
+    setTimeout(() => {
 
-
-      switch (filterState) {
-        case 'All':
-          // Apply filter for "Scottish Registry": include entries containing "scottish"
-
-          sourceDimension.filter(function (d) {
-            return d ==="Scottish lobbying register";
-          });
-          filterState = 'Scotland'; // Update the state
-          button.textContent = 'Scotland'; // Update button label
-          break;
-        case 'Scotland':
-          // Apply filter for "UK Registry": exclude entries containing "scottish"
-          sourceDimension.filter(function (d) {
-            return d ==="UK Government";
-          });
-          filterState = 'UK'; // Update the state
-          button.textContent = 'UK'; // Update button label
-          break;
-        case 'UK':
-          // Remove filter to show "All"
-          sourceDimension.filterAll();
-          filterState = 'All'; // Reset the state
-          button.textContent = 'All'; // Reset button label
-          break;
-      }
-
-      // Redraw all charts to reflect the current filter state
-      dc.redrawAll();
-	  this.style.fontWeight = 'bold';
-      setTimeout(function() {
-    button.disabled = false; // Re-enable button
-    //button.querySelector('.loading-donut').hidden = true; // Hide loading donut
-  }, 1000); // Adjust timeout duration as needed
+  switch (filterState) {
+    case 'All':
+      sourceDimension.filter(function (d) {
+        return d === "Scottish lobbying register";
+      });
+      filterState = 'Scotland';
+      button.textContent = 'Scotland';
+      break;
+    case 'Scotland':
+      sourceDimension.filter(function (d) {
+        return d === "UK Government";
+      });
+      filterState = 'UK';
+      button.textContent = 'UK';
+      break;
+    case 'UK':
+      sourceDimension.filterAll();
+      filterState = 'All';
+      button.textContent = 'All';
+      break;
+  }
+dc.redrawAll(); // This assumes operations are synchronous
+      
+      // After processing, schedule the UI update to hide the loader and re-enable the button
+      requestAnimationFrame(() => {
+        button.disabled = false;
+        vuedata.loader = false;
+      });
+    }, 0); // Execute the deferred logic immediately after the current call stack clears
+  });
 });
-	var tagDimension = ndx.dimension(function (d) {
-      return d.tag;
-    });
-    // Initial state of the filter is set to 'All'
-    var tagState = 'All';
 
-    // Add event listener to your button
-document.getElementById('filter-tag-button').addEventListener('click', function () {
-  var button = this;
-  button.disabled = true; // Disable button
-  //button.querySelector('.loading-donut').hidden = false; // Show loading donut
+var tagDimension = ndx.dimension(function (d) {
+  return d.tag;
+});
 
+// Initial state of the filters
+var activeFilters = [];
 
-
-
-switch (tagState) {
-  case 'All':
-    // Apply filter for "Climate"
-    tagDimension.filter(function (d) {
-      return d === "Climate";
-    });
-    tagState = 'Climate'; // Update the state
-    button.textContent = 'Climate'; // Update button label
-    break;
-
-  case 'Climate':
-    // Remove filter to show "All"
+// Function to update the dimension filter based on active filters
+function updateDimensionFilter() {
+  if (activeFilters.length === 0) {
     tagDimension.filterAll();
-    tagState = 'All'; // Reset the state
-    button.textContent = 'All'; // Reset button label
-    break;
+  } else {
+    tagDimension.filter(function (d) {
+      return activeFilters.includes(d);
+    });
+  }
+  dc.redrawAll();
 }
 
+// Function to toggle the filter state
+function toggleFilterState(filter) {
+  const index = activeFilters.indexOf(filter);
+  if (index === -1) {
+    activeFilters.push(filter);
+  } else {
+    activeFilters.splice(index, 1);
+  }
+  updateDimensionFilter();
+}
+const filterIcons = {
+  Climate: 'leaf',
+  "Financial Services": 'piggy-bank',
+  Health: 'heart-pulse',
+  Technology: 'microchip',
+  Defence: 'shield-halved',
+};
+// Setup buttons
+const filters = ['Climate', 'Financial Services', 'Health', 'Technology', 'Defence']; // Example filters
+filters.forEach(filter => {
+  const button = document.createElement('button');
+  const iconName = filterIcons[filter];
+  button.innerHTML = `<i class="fa fa-${iconName} icon-white"></i>`; // Apply 'icon-white' class
+  button.classList.add('filter-button');
+  button.dataset.filter = filter;
+  button.title = filter; // Set the tooltip text to the filter name
 
-      // Redraw all charts to reflect the current filter state
-      dc.redrawAll();
-      this.style.fontWeight = 'bold';
-      setTimeout(function() {
-    button.disabled = false; // Re-enable button
-    //button.querySelector('.loading-donut').hidden = true; // Hide loading donut
-  }, 1000); // Adjust timeout duration as needed
+  button.addEventListener('click', function () {
+    // Disable button immediately to prevent multiple clicks
+    this.disabled = true;
+    
+    // Use requestAnimationFrame to ensure loader is shown in the next frame
+    requestAnimationFrame(() => {
+      vuedata.loader = true; // Show loader
+
+      // Defer the rest of the logic
+      setTimeout(() => {
+        const filter = this.dataset.filter;
+        toggleFilterState(filter);
+        this.classList.toggle('active'); // Toggle a class that changes the button's appearance
+
+        if (this.classList.contains('active')) {
+          this.style.backgroundColor = '#3694d1'; // Example active color
+        } else {
+          this.style.backgroundColor = ''; // Reset to default
+        }
+
+        // Schedule the UI update to hide the loader and re-enable the button
+        requestAnimationFrame(() => {
+          this.disabled = false;
+          vuedata.loader = false;
+        });
+      }, 0); // Execute the deferred logic immediately after the current call stack clears
+    });
+  });
+
+  document.getElementById('filter-buttons').appendChild(button);
 });
 
-  //CHART 1
+//chart 1
   var createLevelChart = function() {
-    var order = ['Prime Minister', 'Chancellor of the Exchequer', 'Secretary of State', 'Minister of State', 'Parliamentary Under-Secretary', 'Others']
+    var order = ['Prime Minister', 'Chancellor of the Exchequer', 'Secretary of State', 'Minister of State', 'Parliamentary Under-Secretary', 'First Minister',  'Others']
     var chart = charts.level.chart;
     var dimension = ndx.dimension(function (d) {
       return d.ministerialLevel;
@@ -492,7 +567,7 @@ switch (tagState) {
       })
       .dimension(dimension)
       .ordering(function(d) { return order.indexOf(d.key)})
-      .ordinalColors(["#981b48", "#b7255a", "#d73771", "#ec5189", "#ec7ca6", "#ccc"])
+      .ordinalColors(["#981b48", "#b7255a", "#d73771", "#ec5189", "#ec7ca6", "#9B72AA", "#ccc"])
       /*
       .colorCalculator(function(d, i) {
         return vuedata.colors.institutionsTypes[d.key];
@@ -502,6 +577,10 @@ switch (tagState) {
 
     chart.render();
   }
+
+
+
+
 
 
   //CHART 2 Revised with Filtering and Limiting to 10 Maximum
@@ -900,22 +979,68 @@ var createDepartmentChart = function() {
     }
   }
 
-  //Reset charts
-  var resetGraphs = function() {
-    for (var c in charts) {
-      if(charts[c].type !== 'table' && charts[c].chart.hasFilter()){
-        charts[c].chart.filterAll();
-      }
-    }
+// Reset charts and filters
+var resetGraphs = function() {
 	
-    searchDimension.filter(null);
-    dateEvent.filter(null);
-    $('#search-input').val('');
-    dc.redrawAll();
+  for (var c in charts) {
+    if(charts[c].type !== 'table' && charts[c].chart.hasFilter()){
+      charts[c].chart.filterAll();
+    }
   }
-  $('.reset-btn').click(function(){
-    resetGraphs();
-  })
+
+  // Resetting sourceDimension and tagDimension filters
+  sourceDimension.filter(null);
+
+  // Resetting the states and button texts
+  filterState = 'All';
+  document.getElementById('filter-source-button').textContent = 'All';
+  document.getElementById('filter-source-button').style.fontWeight = 'bold'; // Reset font weight if needed
+
+
+  // Additional resets you might have
+  searchDimension.filter(null);
+  dateEvent.filter(null);
+  $('#search-input').val('');
+    // Clear the activeFilters array
+  activeFilters = [];
+
+  // Call the function that updates the dimension filter based on activeFilters
+  updateDimensionFilter();
+
+  // Reset all filter buttons to default state
+  filters.forEach(filter => {
+    const button = document.querySelector(`[data-filter="${filter}"]`);
+    if(button) {
+      button.classList.remove('active');
+      button.style.backgroundColor = ''; // Reset to default, adjust as necessary
+    }
+  });	 
+
+  // Redraw all charts to reflect the current state
+  dc.redrawAll();
+}
+
+// Attaching the reset function to the reset button's click event
+$('.reset-btn').click(function(){
+	    this.disabled = true;
+    
+    // Use requestAnimationFrame to ensure loader is shown in the next frame
+    requestAnimationFrame(() => {
+      vuedata.loader = true; // Show loader
+
+      // Defer the rest of the logic
+      setTimeout(() => {
+  resetGraphs();
+
+        // Schedule the UI update to hide the loader and re-enable the button
+        requestAnimationFrame(() => {
+          this.disabled = false;
+          vuedata.loader = false;
+        });
+      }, 0); // Execute the deferred logic immediately after the current call stack clears
+    });
+  });
+
   
   //Render charts
   createLevelChart();

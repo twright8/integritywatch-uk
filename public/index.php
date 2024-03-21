@@ -16,6 +16,8 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500" rel="stylesheet">
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet" href="static/tab_a.css">
 </head>
 <body>
@@ -32,6 +34,7 @@
                   <h1>Open Access UK: monitor lobbying meetings with Government</h1>
                   <p>
                     This is a user-friendly interactive database that provides a unique overview of lobby meetings with UK Government Ministers since 2012. 
+
                     <a href="about.php">Read more</a>.
                   </p> 
                   <i class="material-icons close-btn" @click="showInfo = false">close</i>
@@ -91,25 +94,28 @@
                     <input type="text" id="from" name="from">
                     <label for="to">to</label>
                     <input type="text" id="to" name="to">
-                    <button id="datefilter"><strong>Filter</strong></button>
+                    <button id="datefilter"><strong>FILTER</strong></button>
                   </div>
 				  
                 </div>
               </div>
 			  <div class="col-md-3 chart-col">
 			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'Registry'" :info="'Click to filter lobby meetings based on their governing body. Choose from UK Parliament, Scottish Government & Parliament, or view meetings across both.'"></chart-header>
+			  <chart-header :title="'Registry'" :info="'Click to filter lobby meetings based on their governing body. Choose from UK Government, Scottish Government & Parliament, or view meetings across both.'"></chart-header>
 			  <div class="datefilter-container">
-			  <button id="filter-source-button"><strong>All</strong></button>
+			  <button id="filter-source-button"><strong>ALL</strong></button>
 			  </div>
 			  </div>
 			  </div>
 			  			  <div class="col-md-3 chart-col">
 			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'TOPIC'" :info="'Click to filter by thematic area.'"></chart-header>
-			  <div class="datefilter-container">
-				  <button id="filter-tag-button"><strong>All</strong></button>
-			  </div>
+			  <chart-header :title="'TOPIC'" :info="'Click on the icons below to filter results to a issue area or topic. Blue means that the filter is active.'"></chart-header>
+			  					<div class="button-container" id="filter-buttons">
+    <!-- Buttons will be dynamically inserted here -->
+</div>
+			  <!-- <div class="datefilter-container">
+				  <button id="filter-tag-button"><strong>ALL</strong></button>
+			  </div> -->
 			  </div>
 			  </div>
           <!-- TOGGLE BUTTONS FOR 4TH ROW -->
@@ -127,7 +133,10 @@
           <!-- TABLE -->
           <div class="col-12 chart-col">
             <div class="boxed-container chart-container chart-container-table">
-              <chart-header :title="charts.mainTable.title" :info="charts.mainTable.info" ></chart-header>
+			  <chart-header :title="charts.mainTable.title" :info="charts.mainTable.info" :show-download-button="true"></chart-header>
+
+
+
               <div class="chart-inner chart-table">
                 <table class="table table-hover dc-data-table" id="dc-data-table">
                   <thead>
