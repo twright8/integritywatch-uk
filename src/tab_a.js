@@ -291,7 +291,7 @@ for ( var i = 0; i < 5; i++ ) {
 //Load data and generate charts
 var lobbyist_typeList = {}
 
-csv('./data/iw_uk.csv?' + randomPar, (err, events) => {
+csv('./data/iw_uk.csv.gz?' + randomPar, (err, events) => {
 csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
   var downloadStart = performance.now();
 
