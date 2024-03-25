@@ -152,11 +152,7 @@ var charts = {
     type: 'row',
     divId: 'organizations_chart'
   },
-  subject: {
-    chart: dc.wordCloud("#wordcloud_chart"),
-    type: 'cloud',
-    divId: 'wordcloud_chart'
-  },
+
   mainTable: {
     chart: null,
     type: 'table',
@@ -1077,7 +1073,7 @@ $('.reset-btn').click(function(){
         console.log("Download orgs: " + downloadTime + " milliseconds");
 		  var downloadStart = performance.now();
 
- createWordcloudChart();
+ //createWordcloudChart();
             var downloadEnd = performance.now(); // End timing for download
         var downloadTime = downloadEnd - downloadStart; // Calculate download time
         console.log("word timze: " + downloadTime + " milliseconds");
@@ -1093,11 +1089,52 @@ $('.reset-btn').click(function(){
 
   //Toggle last charts functionality and fix for responsiveness
   vuedata.showAllCharts = false;
-  $('#charts-toggle-btn').click(function(){
-    if(vuedata.showAllCharts){
-      resizeGraphs();
-    }
-  })
+  
+  
+$(document).ready(function() {
+  // This event handler is attached to the '#charts-toggle-btn' button.
+  $('#charts-toggle-btn').click(function() {
+    // Disable the button to prevent multiple clicks during processing.
+    this.disabled = true;
+
+    // Use requestAnimationFrame to ensure loader visibility changes are rendered promptly.
+    requestAnimationFrame(() => {
+      // Show the loading indicator.
+      vuedata.loader = true;
+
+      // Defer the main logic to allow the UI to update the loader visibility.
+      setTimeout(() => {
+        // Create or refresh the word cloud chart.
+		  var downloadStart = performance.now();
+		  if (!charts.subject) {          charts.subject = {
+    chart: dc.wordCloud("#wordcloud_chart"),
+    type: 'cloud',
+    divId: 'wordcloud_chart'
+          };}
+        createWordcloudChart();
+		            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("word timze: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+		  var downloadStart = performance.now();
+
+        // Resize and redraw other graphs if needed.
+        if (vuedata.showAllCharts) {
+          resizeGraphs();
+        }
+		            var downloadEnd = performance.now(); // End timing for download
+        var downloadTime = downloadEnd - downloadStart; // Calculate download time
+        console.log("resizing: " + downloadTime + " milliseconds");
+		  var downloadStart = performance.now();
+        // After processing, update the UI in the next frame to hide the loader and re-enable the button.
+        requestAnimationFrame(() => {
+          this.disabled = false;
+          vuedata.loader = false;
+        });
+      }, 0); // The timeout is set to 0 to run the logic after the current execution stack, ensuring the loader is shown.
+    });
+  });
+});
 
   //Hide loader
   vuedata.loader = false;
