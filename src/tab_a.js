@@ -289,7 +289,6 @@ var lobbyist_typeList = {}
 
 csv('./data/iw_uk.csv?' + randomPar, (err, events) => {
 csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
-  var downloadStart = performance.now();
 
 
   var parseDate = d3.timeParse("%d/%m/%Y");
@@ -357,6 +356,7 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
     //Meeting url
     d.meetingUrl = window.location.href.split('?')[0] + '?meeting=' + d.RecordId;
   });
+  var downloadStart = performance.now();
 
   //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
   var ndx = crossfilter(events);
