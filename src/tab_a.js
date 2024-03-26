@@ -287,7 +287,7 @@ for ( var i = 0; i < 5; i++ ) {
 //Load data and generate charts
 var lobbyist_typeList = {}
 
-fetch('./data/iw_uk.json.gz?' + randomPar)
+fetch('./data/iw_uk.json?' + randomPar)
   .then(response => {
     if (!response.ok) {
         throw new Error('Network response was not ok');
