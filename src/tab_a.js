@@ -287,8 +287,16 @@ for ( var i = 0; i < 5; i++ ) {
 //Load data and generate charts
 var lobbyist_typeList = {}
 
-csv('./data/iw_uk.csv?' + randomPar, (err, events) => {
+fetch('./data/iw_uk.json?' + randomPar)
+  .then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(events => {
 csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
+  var downloadStart = performance.now();
 
 
   var parseDate = d3.timeParse("%d/%m/%Y");
@@ -356,7 +364,6 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
     //Meeting url
     d.meetingUrl = window.location.href.split('?')[0] + '?meeting=' + d.RecordId;
   });
-  var downloadStart = performance.now();
 
   //Set dc main vars. The second crossfilter is used to handle the travels stacked bar chart.
   var ndx = crossfilter(events);
@@ -1211,4 +1218,6 @@ $(document).ready(function() {
     }
   }
 })
-})
+}).catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
