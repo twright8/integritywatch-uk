@@ -29,6 +29,7 @@
           <div class="col-md-12">
             <div class="row">
               <!-- INFO -->
+
               <div class="col-md-8 chart-col" v-if="showInfo">
                 <div class="boxed-container description-container">
                   <h1>Open Access UK: monitor lobbying meetings with Government</h1>
@@ -208,7 +209,7 @@
         <div class="row">
           <div class="footer-col col-12 col-sm-12 footer-counts">
             <div class="dc-data-count count-box">
-              <div class="filter-count">0</div>out of <strong class="total-count">0</strong> meetings
+              <div class="filter-count">0</div>out of <strong class="total-counts">0</strong> meetings
             </div>
             <div class="footer-input">
               <input type="text" id="search-input" placeholder="SEARCH BY LOBBYIST, HOST, SUBJECT">

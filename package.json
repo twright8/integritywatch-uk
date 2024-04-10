@@ -11,13 +11,14 @@
     "jquery-ui-bundle": "^1.12.1-migrate",
     "popper.js": "^1.14.7",
     "scss": "^0.2.4",
-    "underscore": "^1.9.1",
+    "underscore": "^1.13.6",
     "vue": "^2.6.6",
-    "vue-hot-reload-api": "^2.3.2"
+    "vue-hot-reload-api": "^2.3.2",
+    "vue-slider-component": "^3.2.24"
   },
   "scripts": {
     "dev": "parcel watch ./src/*.js -d public/static --no-source-maps",
-  "build": "parcel build ./src/*.js -d public/static --no-source-maps"
+    "build": "parcel build ./src/*.js -d public/static --no-source-maps"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.5.2",

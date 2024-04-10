@@ -28,13 +28,14 @@ import Vue from 'vue';
 import Loader from './components/Loader.vue';
 import ChartHeader from './components/ChartHeader.vue';
 
+
 //import 'jquery-ui-bundle';
 //import 'jquery-ui-bundle/jquery-ui.css';
-
 
 // Data object - is also used by Vue
 
 var vuedata = {
+
   page: 'tabA',
   loader: true,
   readMore: false,
@@ -94,6 +95,7 @@ Vue.component('loader', Loader);
 new Vue({
   el: '#app',
   data: vuedata,
+
   methods: {
     //Share
     downloadDataset: function () {
@@ -287,16 +289,34 @@ for ( var i = 0; i < 5; i++ ) {
 //Load data and generate charts
 var lobbyist_typeList = {}
 
-fetch('./data/iw_uk.json?' + randomPar)
-  .then(response => {
-    if (!response.ok) {
+// Reuse the 'today' variable for the calculation
+let today = new Date();
+let end_date = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+// Reuse the 'today' variable for the calculation
+today.setFullYear(today.getFullYear() - 2);
+let start_date = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+
+function fetchData() {
+	const filterButtonsContainer = document.getElementById('filter-buttons');
+if (filterButtonsContainer) {
+    filterButtonsContainer.innerHTML = '';
+}
+console.log(start_date)
+  fetch(`http://localhost:5000/api/data?start_date=${start_date}&end_date=${end_date}`)
+    .then(response => {
+      if (!response.ok) {
         throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(events => {
+      }
+      return response.json();
+    })
+    .then(data => {
+		const events = data.data;
+		const maxDocs = data.max_docs; 
 csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
   var downloadStart = performance.now();
+  document.querySelector('.total-counts').textContent = maxDocs.toLocaleString();;
 
 
   var parseDate = d3.timeParse("%d/%m/%Y");
@@ -919,23 +939,23 @@ var createDepartmentChart = function() {
     var yyyy = today.getFullYear();
     if(dd<10) dd='0'+dd;
     if(mm<10) mm='0'+mm;
-    return (dd+sp+mm+sp+yyyy);
+    return (yyyy+sp+mm+sp+dd);
   };
   //Initialize datepicker
-  var dateFormat = "dd/mm/yy",
+  var dateFormat = "dd-mm-yy",
 	from = $( "#from" ).datepicker({
-		defaultDate: "01/01/2012",
+		defaultDate: start_date,
 		changeMonth: true,
-		dateFormat: "dd/mm/yy"
+		dateFormat: "yy-mm-dd"
 	})
 	.on( "change", function() {
 		to.datepicker( "option", "minDate", getDate( this ) );
 		inidate = getDate( this );	  
 	}),
 	to = $( "#to" ).datepicker({
-	defaultDate: currentDate("/"),
+	defaultDate: currentDate("-"),
 	changeMonth: true,
-	dateFormat: "dd/mm/yy"
+	dateFormat: "yy-mm-dd"
 	})
 	.on( "change", function() {
 	from.datepicker( "option", "maxDate", getDate( this ) );
@@ -952,25 +972,12 @@ var createDepartmentChart = function() {
 		return date;
   }
   //Set ini and end default dates
-	$( "#from" ).val('01/01/2012');
-	$( "#to" ).val(currentDate("/"));
+	$( "#from" ).val(start_date);
+	$( "#to" ).val(currentDate("-"));
 	inidate = $( "#from" ).datepicker( "getDate" );
   enddate = $( "#to" ).datepicker( "getDate" );
   
-  //Date filter
-  $("#datefilter").click(function () {
-    dateEvent.filter(function(d) { 
-      return (d == "" || ((d.getTime() >= inidate.getTime()) && (d.getTime() <= enddate.getTime())));
-    });
-		throttle();
-		var throttleTimer;
-		function throttle() {
-			window.clearTimeout(throttleTimer);
-			throttleTimer = window.setTimeout(function() {
-				dc.redrawAll();
-			}, 250);
-		}
-  });
+
   
   //Set word for wordcloud
   var setword = function(wd) {
@@ -1157,6 +1164,7 @@ $(document).ready(function() {
   counter.on("renderlet.resetall", function(c) {
     RefreshTable();
   });
+  
 
   //Lobbyists counter
   function drawLobbyistsCounter() {
@@ -1220,4 +1228,43 @@ $(document).ready(function() {
 })
 }).catch(error => {
     console.error('There was a problem with the fetch operation:', error);
-  });
+});}
+fetchData();
+
+function updateDateRange() {
+  vuedata.loader = true;
+  const newStartDate = document.getElementById('from').value;
+  const newEndDate = document.getElementById('to').value;
+  
+  // Regular expression to match the date format yyyy-mm-dd
+  const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+  // Convert dates to Date objects to compare and validate format
+  const startDateObj = new Date(newStartDate);
+  const endDateObj = new Date(newEndDate);
+  
+  // Check if the dates are in the correct format
+  if (!dateFormat.test(newStartDate) || !dateFormat.test(newEndDate)) {
+    console.error('Invalid date format. Please use yyyy-mm-dd format.');
+    vuedata.loader = false;
+    return; // Exit the function
+  }
+
+  if (newStartDate && newEndDate) {
+    if (startDateObj <= endDateObj) {
+      start_date = newStartDate;
+      end_date = newEndDate;
+      fetchData();
+    } else {
+      console.error('The start date must be before the end date.');
+      vuedata.loader = false;
+    }
+  } else {
+    console.error('Please enter both start and end dates.');
+    vuedata.loader = false;
+  }
+}
+
+
+const dateFilterButton = document.getElementById('datefilter');
+dateFilterButton.addEventListener('click', updateDateRange);
