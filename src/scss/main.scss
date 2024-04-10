@@ -14,52 +14,85 @@ $color_lobby: #3694d1;
     }
   }
 }
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  #dater {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .resizer {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
 
-	/* Topic buttons */
-			.button-container {
-				margin: 10px;
-				padding: 10px;
-				display: flex;
-		justify-content: space-evenly;
-		/* align-items: flex-end; */
-		flex-direction: row;
-		flex-wrap: wrap;
+ 
+/* Topic and registry buttons */
+ .button-container {
+     margin: 10px;
+     padding: 10px;
+     display: flex;
+     row-gap: 10px;
+     column-gap:1px;
+     justify-content: space-evenly;
+    /* align-items: flex-end;
+     */
+     flex-direction: row;
+     flex-wrap: nowrap;
+}
+ .icon-white {
+     color: white;
+}
+ .filter-button:hover {
+     background: #1a6a9e;
+     border: none!important;
+     outline:none
+}
+ .filter-button {
+     width: 100%;
+     max-width:50px;
+     margin: 5px;
+     height: 36px;
+     outline:none;
+     padding: 0;
+     // Adjust padding as necessary to fit the icon nicely display: flex;
+     justify-content: center;
+     align-items: center;
+     border: none;
+     border-radius: 2px;
+     cursor: pointer;
+     font-size: 16px;
+     background: #D3D3D3;
+}
+ .filter-button.active {
+     background-color: #3694d1!important;
+     outline:none;
+     border: none!important;
+     color: black;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) 
+}
+ .filter-button:focus {
+     outline:none;
+}
+ .regbutton:hover {
+     background: #1a6a9e!important;
+     border: none!important;
+     outline:none 
+}
+ .regbutton:focus {
+     outline:none;
+}
+ .regbutton {
+     color:white;
+     width: 100%;
+     max-width:100%;
+}
 
-			}
-			.icon-white {
-	  color: white;
-	}
-	.filter-button:hover {
-	background: #1a6a9e;
-	border: none!important;
-	outline:none}
-	.filter-button {
-		width: 50px;
-		height: 36px;
-		outline:none;
-		padding: 0; // Adjust padding as necessary to fit the icon nicely
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 16px; // Adjust if necessary to fit the icon within the button dimensions
-		transition: background-color 0.3s ease;
-		background: #D3D3D3;
-	}
-			.filter-button.active {
-				background-color: #3694d1!important;
-				outline:none;
-				border: none!important;
-				color: black;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
-				
-			}
-						.filter-button:focus {
-				outline:none;
-				
-			}
 		/* HEADER */
 #iw-nav {
   background: $color_TI;
@@ -1027,7 +1060,7 @@ table.dataTable tbody tr:hover {
 .tabA {
   .chart-table {
     td, th {
-      &:nth-child(1), &:nth-child(4), &:nth-child(5) {
+      &:nth-child(1), &:nth-child(3), &:nth-child(5) {
         @media only screen and (max-width: 768px) {
           display: none;
         }
@@ -1035,6 +1068,12 @@ table.dataTable tbody tr:hover {
     }
   }
 }
+.boxed-container{
+height:100%;}
+
+
+
+
 
 /* DATEPICKER */
 .datefilter-container {

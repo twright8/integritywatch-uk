@@ -16,7 +16,12 @@
           <a class="dropdown-item" href="https://www.integritywatch.eu/" target="_blank">EU</a>
           <a class="dropdown-item" href="https://www.integritywatch.fr/" target="_blank">France</a>
           <a class="dropdown-item" href="http://www.soldiepolitica.it/" target="_blank">Italy</a>
-          <a class="dropdown-item" href="https://integritywatch.cl/" target="_blank">Chile</a>
+		  <a class="dropdown-item" href="https://www.integritywatch.gr/" target="_blank">Greece</a>
+          <a class="dropdown-item" href="https://deputatiuzdelnas.lv/" target="_blank">Latvia</a>
+          <a class="dropdown-item" href="https://manoseimas.lt/" target="_blank">Lithuania</a>
+          <a class="dropdown-item" href="https://integritywatch.nl/" target="_blank">Netherlands</a>
+		  <a class="dropdown-item" href="https://www.integritywatch.es/" target="_blank">Spain</a>
+          <a class="dropdown-item" href="http://varuhintegritete.transparency.si/" target="_blank">Slovenia</a>
         </div>
       </li>
       <li class="nav-item">

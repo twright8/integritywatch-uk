@@ -31,9 +31,10 @@
               <!-- INFO -->
               <div class="col-md-8 chart-col" v-if="showInfo">
                 <div class="boxed-container description-container">
-                  <h1>Open Access UK: monitor lobbying meetings with Government</h1>
+                  <h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
                   <p>
-                    This is a user-friendly interactive database that provides a unique overview of lobby meetings with UK Government Ministers since 2012. 
+                    
+This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament. 
 
                     <a href="about.php">Read more</a>.
                   </p> 
@@ -85,10 +86,10 @@
               </div>
             </div>
           </div>
-		                <div class="col-md-6 chart-col">
+		                <div class="col-md-6 chart-col" id="dater">
 			  
                 <div class="boxed-container chart-container tab_a_3">
-                  <chart-header :title="'DATE'" :info="''"></chart-header>
+                  <chart-header :title="'DATE'" :info="'Click to filter meetings based on their date. Click \'' + 'Filter' + '\' when you have selected the date range you want to apply.'"></chart-header>
                   <div class="datefilter-container">
                     <label for="from">From</label>
                     <input type="text" id="from" name="from">
@@ -99,36 +100,25 @@
 				  
                 </div>
               </div>
-			  <div class="col-md-3 chart-col">
+			  <div class="col-md-3 chart-col resizer">
 			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'Registry'" :info="'Click to filter lobby meetings based on their governing body. Choose from UK Government, Scottish Government & Parliament, or view meetings across both.'"></chart-header>
-			  <div class="datefilter-container">
-			  <button id="filter-source-button"><strong>ALL</strong></button>
+			  <chart-header :title="'Registry'" :info="'Click to filter meetings based on the source of the data. Choose from UK Government disclosures, the Scottish lobbying register, or both.'"></chart-header>
+			  <div class="button-container">
+			  
+			  <button id="filter-source-button-uk" class="regbutton filter-button"><strong>UK</strong></button>
+			  <button id="filter-source-button-scot" class="regbutton filter-button"><strong>SCOTLAND</strong></button>
 			  </div>
 			  </div>
 			  </div>
-			  			  <div class="col-md-3 chart-col">
+			  			  <div class="col-md-3 chart-col resizer">
 			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'TOPIC'" :info="'Click on the icons below to filter results to a issue area or topic. Blue means that the filter is active.'"></chart-header>
-			  					<div class="button-container" id="filter-buttons">
+			  <chart-header :title="'TOPIC'" :info="'Click on the icons below to filter results to a topic area. Blue means that the filter is active. Select as many topics as you want. De-selecting all topic filters shows all the data.'"></chart-header>
+			  					<div class="button-container " id="filter-buttons">
     <!-- Buttons will be dynamically inserted here -->
 </div>
-			  <!-- <div class="datefilter-container">
-				  <button id="filter-tag-button"><strong>ALL</strong></button>
-			  </div> -->
+
 			  </div>
 			  </div>
-          <!-- TOGGLE BUTTONS FOR 4TH ROW -->
-          <div class="col-md-12 toggle-btn-container">
-            <button class="toggle-btn" id="charts-toggle-btn" @click="showAllCharts = !showAllCharts">View key words for meetings</button>
-          </div>
-          <!-- TOGGLEABLE CHARTS -->
-          <div class="col-md-12 chart-col" id="wordcloud_chart_col" v-show="showAllCharts">
-            <div class="boxed-container chart-container meetings_6">
-              <chart-header :title="charts.subject.title" :info="charts.subject.info" ></chart-header>
-              <div class="chart-inner" id="wordcloud_chart"></div>
-            </div>
-          </div>
 
           <!-- TABLE -->
           <div class="col-12 chart-col">
@@ -211,7 +201,7 @@
               <div class="filter-count">0</div>out of <strong class="total-count">0</strong> meetings
             </div>
             <div class="footer-input">
-              <input type="text" id="search-input" placeholder="SEARCH BY LOBBYIST, HOST, SUBJECT">
+              <input type="text" id="search-input" placeholder="SEARCH BY LOBBYIST, HOST, PURPOSE">
               <i class="material-icons">search</i>
             </div>
           </div>

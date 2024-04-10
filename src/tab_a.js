@@ -54,21 +54,17 @@ var vuedata = {
     },
     hosts: {
       title: 'TOP 10 HOSTS',
-      info: 'This bar chart shows the Ministers who have had the most contact with lobby organisations. When Ministers meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts can therefore be higher than the number of meetings diplayed on this portal. Click on the bar chart to filter the rest of the tool by Minister.'
+      info: 'This bar chart shows the hosts who have had the most contact with lobby organisations. Click on the bar chart to filter the rest of the tool by host.\n\n Note: Due to issues with the source data, when UK Government hosts meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts with individual lobbyists can therefore be higher than the number of meetings diplayed on this portal.'
     },
     organizations: {
       title: 'Top 10 Lobbyists',
-      info: 'This bar chart shows the lobby organisations who have had the most contact with Ministers. When Ministers meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts can therefore be higher than the number of meetings diplayed on this portal.  Click on the bar chart to filter the rest of the tool by lobby organisation.'
-    },
-    subject: {
-      title: 'Subjects of lobby meetings',
-      info: 'This word cloud provides an overview of the most common terms that appear in the subject of meetings between lobby organisations and Ministers. The more meetings on a given subject the bigger it appears in the word cloud.'
+      info: 'This bar chart shows lobby organisations who have had the most contact with hosts in the UK Government, Scottish Government, and Scottish Parliament. Click on the bar chart to filter the rest of the tool by lobby organisation.\n\n Note: Due to issues with the source data, this is only a rough figure for exploring the data. When UK Government hosts meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts between lobbyists and hosts can therefore be higher than the number of meetings diplayed on this portal. Conversely, when lobbyists meet multiple hosts in the Scottish Government or Parliament at the same time, we have split them out into individual rows.'
     },
     mainTable: {
       chart: null,
       type: 'table',
-      title: 'Table',
-      info: 'This table presents a curated list of meetings filtered based on your selections. Use the filters above to refine the view according to meeting date, department, policy level, and other criteria.'
+      title: 'Results',
+      info: 'This table presents a list of meetings based on the filters you apply. Use the filters above to refine this view.'
     }
   },
   selectedElement: { "P": "", "Sub": ""},
@@ -102,7 +98,7 @@ new Vue({
     share: function (platform) {
       if(platform == 'twitter'){
         var thisPage = window.location.href.split('?')[0];
-        var shareText = 'Who’s lobbying the UK Government? Find out here ' + thisPage;
+        var shareText = 'Who’s lobbying ministers and legislators across the UK, when and why? ' + thisPage;
         var shareURL = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
         window.open(shareURL, '_blank');
         return;
@@ -164,11 +160,7 @@ var charts = {
 var recalcWidth = function(divId) {
   return document.getElementById(divId).offsetWidth - vuedata.chartMargin;
 };
-var recalcWidthWordcloud = function() {
-  //Replace element if with wordcloud column id
-  var width = document.getElementById("wordcloud_chart_col").offsetWidth - vuedata.chartMargin*2;
-  return [width, 550];
-};
+
 var recalcCharsLength = function(width) {
   return parseInt(width / 8);
 };
@@ -236,10 +228,7 @@ var resizeGraphs = function() {
             return thisKey;
           }));
         charts[c].chart.redraw();
-      } else if(charts[c].type == 'cloud') {
-        charts[c].chart.size(recalcWidthWordcloud());
-        charts[c].chart.redraw();
-      }
+      } 
     }
   }
 };
@@ -421,57 +410,70 @@ document.getElementById('exportButton').addEventListener('click', exportFiltered
 // with your dataset somewhere in your script before this code block.
 
 // Create a dimension based on the "portal_source" column
-var sourceDimension = ndx.dimension(function (d) {
-      return d.portal_source;
-    });
-
-    // Initial state of the filter is set to 'All'
-    var filterState = 'All';
-
-    // Add event listener to your button
-document.getElementById('filter-source-button').addEventListener('click', function () {
-  var button = this;
-  button.disabled = true; // Disable the button to prevent further clicks
-  button.style.fontWeight = 'bold';
-  button.style.textTransform = 'uppercase'; 
-  // Show the loader at the very next frame
-  requestAnimationFrame(() => {
-    vuedata.loader = true; // Attempt to show loader immediately
-    
-    // Defer the rest of the logic
-    setTimeout(() => {
-
-  switch (filterState) {
-    case 'All':
-      sourceDimension.filter(function (d) {
-        return d === "Scottish lobbying register";
-      });
-      filterState = 'Scotland';
-      button.textContent = 'Scotland';
-      break;
-    case 'Scotland':
-      sourceDimension.filter(function (d) {
-        return d === "UK Government";
-      });
-      filterState = 'UK';
-      button.textContent = 'UK';
-      break;
-    case 'UK':
-      sourceDimension.filterAll();
-      filterState = 'All';
-      button.textContent = 'All';
-      break;
-  }
-dc.redrawAll(); // This assumes operations are synchronous
-      
-      // After processing, schedule the UI update to hide the loader and re-enable the button
-      requestAnimationFrame(() => {
-        button.disabled = false;
-        vuedata.loader = false;
-      });
-    }, 0); // Execute the deferred logic immediately after the current call stack clears
-  });
+// Assuming ndx is already defined and is your crossfilter instance
+var sourceDimension = ndx.dimension(function(d) {
+  return d.portal_source;
 });
+
+// Tracks which filters are currently active
+var activeFilters = {
+  'Scottish lobbying register': false,
+  'UK Government': false
+};
+
+// Function to initialize button states and event listeners
+function initializeButton(buttonId, filterValue) {
+  var button = document.getElementById(buttonId);
+  button.style.backgroundColor = '#D3D3D3'; // Default state for non-active filters
+
+  button.addEventListener('click', function() {
+    // Toggle the active state of the filter
+    activeFilters[filterValue] = !activeFilters[filterValue];
+    // Show loader immediately
+    Vue.set(vuedata, 'loader', true);
+    // Apply filters and update UI
+    requestAnimationFrame(() => {
+      applyFilters();
+    });
+  });
+}
+
+// Applies active filters to the dimension and updates the UI accordingly
+function applyFilters() {
+  var activeFilterValues = Object.keys(activeFilters).filter(key => activeFilters[key]);
+
+  // Filter data based on active filters
+  if (activeFilterValues.length === 0) {
+    sourceDimension.filterAll();
+  } else {
+    sourceDimension.filter(function(d) {
+      return activeFilterValues.includes(d);
+    });
+  }
+
+  // Update button styles and disable loader after UI updates
+  setTimeout(() => {
+    updateButtonStyles();
+    Vue.set(vuedata, 'loader', false); // Hide loader after updating the UI
+    dc.redrawAll(); // Redraw charts with the new filter
+  }, 0);
+}
+
+// Updates the styles of buttons based on the active filters
+function updateButtonStyles() {
+  Object.entries(activeFilters).forEach(([filterValue, isActive]) => {
+    var buttonId = filterValue === 'Scottish lobbying register' ? 'filter-source-button-scot' : 'filter-source-button-uk';
+    var button = document.getElementById(buttonId);
+    button.style.backgroundColor = isActive ? '#3694d1' : '#D3D3D3';
+    button.disabled = false; // Re-enable the button after processing
+  });
+}
+
+// Initialize buttons with their respective filter values
+initializeButton('filter-source-button-scot', 'Scottish lobbying register');
+initializeButton('filter-source-button-uk', 'UK Government');
+
+
 
 var tagDimension = ndx.dimension(function (d) {
   return d.tag;
@@ -736,29 +738,7 @@ var createDepartmentChart = function() {
   }
 
   //CHART 5
-  var createWordcloudChart = function() {
-    var chart = charts.subject.chart;
-    var dimension = ndx.dimension(function(d) {
-      return d.purpose || "";
-    })
-    var group = dimension.group().reduceSum(function(d) { return 1; });
-    chart
-    .dimension(dimension)
-    .group(group)
-    .rotate(function() { return ~~(Math.random() * 2) * 90; })
-    .maxWords(70)
-    .timeInterval(10)
-    .duration(200)
-    .ordinalColors(vuedata.colors.colorSchemeCloud)
-    .size(recalcWidthWordcloud())
-    .scale(d3.scaleLinear().domain([5,400]).range([14, 25]))
-    .font("Impact")
-    .stopWords (/^(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall|la|du|mr|commissioner|et|des|dg|commission|de|pour|en|les|le|meeting|eu|new|priorities|presentation|preparation|issues|meetings|representatives|work|implementation|general|future|challenge|challenge|skey|role|exchange|views|discuss|discussion|various director|talks|position|global|field|level|initiative|company|state|aspects|context|current|change|european|potential|including|dans|within|developments|play|present|Päris|Enegry|deep|Susan|Danger|Managing|Director|AmCham|Karl|Cox|Vice|President|Oracle| Bert|Boers|SAS|Marco|Comastri|EMEA|CA|Patrick|Deconinck|Senior|Western|3M|Harry|van| Dorenmalen|Chairman|IBM|Aongus|Hegarty|Dell|Cindy|Miller|UPS|Christian|Morales|Manager|Intel| |Julián|Nebreda|AES|Peter|Ryan|VP|HP|Nigel|Lewis|Caterpillar|Dirk|Ostijn|Head|&| Chief|Executive |Officer|MetLife|CA|flagship|related|portfolio|Cssr|Jourova|(| voting|all|expats|as|part|)|,|Year)$/)
-    .onClick(function(d){setword(d.key);})
-    .textAccessor(function(d) {return d.purpose;});
-    chart.size(recalcWidthWordcloud());
-    chart.render();
-  }
+ 
 
   //TABLE
   var createTable = function() {
@@ -872,41 +852,60 @@ var createDepartmentChart = function() {
   }
 
   //SEARCH INPUT FUNCTIONALITY
-  var typingTimer;
-  var doneTypingInterval = 1000;
-  var $input = $("#search-input");
-  $input.on('keyup', function () {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-  });
-  $input.on('keydown', function () {
-    clearTimeout(typingTimer);
-  });
-  function doneTyping () {
-    var s = $input.val().toLowerCase();
-    searchDimension.filter(function(d) { 
-      var d2 = d.replace(/ and /ig, ' & ')
-      //Split words
-      //.replace(/,/ig, ' ')
-      var splitSearch = s.replace(/ and /ig, ' & ').replace(/,/ig, ' ').replace(/  /ig, ' ').split(" ");
-      var match = true;
-      _.each(splitSearch, function (w) {
-        if(d2.indexOf(w) == -1) {
-          match = false;
-        }
-      });
-      return match;
-      //return d.indexOf(s) !== -1;
+
+var typingTimer;
+var doneTypingInterval = 1000;
+var $input = $("#search-input");
+
+// Keyup event to start the timer
+$input.on('keyup', function () {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(doneTyping, doneTypingInterval);
+});
+
+// Keydown event to clear the timer
+$input.on('keydown', function () {
+  clearTimeout(typingTimer);
+});
+
+function doneTyping() {
+  var s = $input.val().toLowerCase();
+  // Extract phrases in quotation marks and individual words outside quotation marks
+  var phrases = s.match(/"[^"]+"|\S+/g) || [];
+  
+  searchDimension.filter(function(d) {
+    var entry = d; // The current entry string to be searched
+    var allMatch = true; // Flag to keep track of whether all search terms match
+    
+    phrases.forEach(function(phrase) {
+      var exactMatch = phrase.startsWith('"') && phrase.endsWith('"');
+      var searchPhrase = exactMatch ? phrase.slice(1, -1) : phrase;
+      
+      if (exactMatch) {
+        // For exact phrase matches, check if the phrase exists in the entry as is
+        if (entry.indexOf(searchPhrase) === -1) allMatch = false;
+      } else {
+        // For non-exact (individual word) matches, ensure each word is present anywhere in the string
+        var words = searchPhrase.split(" ");
+        words.forEach(function(word) {
+          if (entry.indexOf(word) === -1) allMatch = false;
+        });
+      }
     });
-    throttle();
-    var throttleTimer;
-    function throttle() {
-      window.clearTimeout(throttleTimer);
-      throttleTimer = window.setTimeout(function() {
-          dc.redrawAll();
-      }, 250);
-    }
-  }
+    
+    return allMatch;
+  });
+  
+  throttle();
+}
+
+var throttleTimer;
+function throttle() {
+  window.clearTimeout(throttleTimer);
+  throttleTimer = window.setTimeout(function() {
+    dc.redrawAll();
+  }, 250);
+}
 
   //DATEPICKER FUNCTIONALITY
   var inidate;
@@ -972,24 +971,7 @@ var createDepartmentChart = function() {
 		}
   });
   
-  //Set word for wordcloud
-  var setword = function(wd) {
-    //console.log(charts.subject.chart);
-    $("#search-input").val(wd);
-    var s = wd.toLowerCase();
-    searchDimension.filter(function(d) { 
-      return d.indexOf(s) !== -1;
-    });
-    throttle();
-    var throttleTimer;
-    function throttle() {
-      window.clearTimeout(throttleTimer);
-      throttleTimer = window.setTimeout(function() {
-        console.log ("redraw");
-          dc.redrawAll();
-      }, 250);
-    }
-  }
+
 
 // Reset charts and filters
 var resetGraphs = function() {
@@ -1003,10 +985,7 @@ var resetGraphs = function() {
   // Resetting sourceDimension and tagDimension filters
   sourceDimension.filter(null);
 
-  // Resetting the states and button texts
-  filterState = 'All';
-  document.getElementById('filter-source-button').textContent = 'All';
-  document.getElementById('filter-source-button').style.fontWeight = 'bold'; // Reset font weight if needed
+
 
 
   // Additional resets you might have
@@ -1015,7 +994,15 @@ var resetGraphs = function() {
   $('#search-input').val('');
     // Clear the activeFilters array
   activeFilters = [];
+var buttons = document.getElementsByClassName('regbutton');
 
+// Loop through the NodeList of selected elements
+for(var i = 0; i < buttons.length; i++) {
+    // For each element, remove the 'active' class
+    buttons[i].classList.remove('active');
+    // Change the background color to #D3D3D3
+    buttons[i].style.backgroundColor = '#D3D3D3';
+}
   // Call the function that updates the dimension filter based on activeFilters
   updateDimensionFilter();
 
@@ -1080,11 +1067,6 @@ $('.reset-btn').click(function(){
         console.log("Download orgs: " + downloadTime + " milliseconds");
 		  var downloadStart = performance.now();
 
- //createWordcloudChart();
-            var downloadEnd = performance.now(); // End timing for download
-        var downloadTime = downloadEnd - downloadStart; // Calculate download time
-        console.log("word timze: " + downloadTime + " milliseconds");
-		  var downloadStart = performance.now();
 
   createTable();
             var downloadEnd = performance.now(); // End timing for download
@@ -1098,50 +1080,7 @@ $('.reset-btn').click(function(){
   vuedata.showAllCharts = false;
   
   
-$(document).ready(function() {
-  // This event handler is attached to the '#charts-toggle-btn' button.
-  $('#charts-toggle-btn').click(function() {
-    // Disable the button to prevent multiple clicks during processing.
-    this.disabled = true;
 
-    // Use requestAnimationFrame to ensure loader visibility changes are rendered promptly.
-    requestAnimationFrame(() => {
-      // Show the loading indicator.
-      vuedata.loader = true;
-
-      // Defer the main logic to allow the UI to update the loader visibility.
-      setTimeout(() => {
-        // Create or refresh the word cloud chart.
-		  var downloadStart = performance.now();
-		  if (!charts.subject) {          charts.subject = {
-    chart: dc.wordCloud("#wordcloud_chart"),
-    type: 'cloud',
-    divId: 'wordcloud_chart'
-          };}
-        createWordcloudChart();
-		            var downloadEnd = performance.now(); // End timing for download
-        var downloadTime = downloadEnd - downloadStart; // Calculate download time
-        console.log("word timze: " + downloadTime + " milliseconds");
-		  var downloadStart = performance.now();
-		  var downloadStart = performance.now();
-
-        // Resize and redraw other graphs if needed.
-        if (vuedata.showAllCharts) {
-          resizeGraphs();
-        }
-		            var downloadEnd = performance.now(); // End timing for download
-        var downloadTime = downloadEnd - downloadStart; // Calculate download time
-        console.log("resizing: " + downloadTime + " milliseconds");
-		  var downloadStart = performance.now();
-        // After processing, update the UI in the next frame to hide the loader and re-enable the button.
-        requestAnimationFrame(() => {
-          this.disabled = false;
-          vuedata.loader = false;
-        });
-      }, 0); // The timeout is set to 0 to run the logic after the current execution stack, ensuring the loader is shown.
-    });
-  });
-});
 
   //Hide loader
   vuedata.loader = false;
