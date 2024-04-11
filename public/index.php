@@ -123,10 +123,7 @@ This is a user-friendly interactive database that provides a unique overview of 
           <!-- TABLE -->
           <div class="col-12 chart-col">
             <div class="boxed-container chart-container chart-container-table">
-			  <chart-header :title="charts.mainTable.title" :info="charts.mainTable.info" :show-download-button="true"></chart-header>
-
-
-
+			  <chart-header :title="charts.mainTable.title" :info="charts.mainTable.info" :show-download-button="false"></chart-header>
               <div class="chart-inner chart-table">
                 <table class="table table-hover dc-data-table" id="dc-data-table">
                   <thead>
@@ -208,11 +205,25 @@ This is a user-friendly interactive database that provides a unique overview of 
         </div>
         <!-- Reset filters -->
         <button class="reset-btn"><i class="material-icons">settings_backup_restore</i><span class="reset-btn-text">Reset</span></button>
-        <div class="footer-buttons-right">
-          <button @click="downloadDataset"><i class="material-icons">cloud_download</i></button>
-          <button class="btn-twitter" @click="share('twitter')"><img src="./images/twitter.png" /></button>
-          <button class="btn-fb" @click="share('facebook')"><img src="./images/facebook.png" /></button>
-        </div>
+<div class="footer-buttons-right" id="download-buttons">
+<div class="dropup" id="download-dropdown">
+  <!-- Trigger button -->
+  <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fa-solid fa-cloud-arrow-down" id="cloud-download"></i>
+  </a>
+  <!-- Dropdown content -->
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <button @click="downloadDataset" class="dropdown-item blue"><i class="fa-solid fa-cloud-arrow-down"></i> <strong>Full dataset</strong></button>
+    <button id="exportButton" class="dropdown-item btn btn-download blue" title="Download filtered data">
+      <i class="fa fa-filter"></i> <strong>Filtered data</strong>
+    </button>
+  </div>
+</div>
+  <button class="btn-twitter" @click="share('twitter')"><img src="./images/twitter.png" /></button>
+  <button class="btn-fb" @click="share('facebook')"><img src="./images/facebook.png" /></button>
+</div>
+
       </div>
       <!-- Loader -->
       <loader v-if="loader" :text="'Loading ...'" />

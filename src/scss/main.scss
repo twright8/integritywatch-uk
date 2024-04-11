@@ -74,8 +74,9 @@ $color_lobby: #3694d1;
      outline:none;
      border: none!important;
      color: black;
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) 
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
 }
+
  .filter-button:focus {
      outline:none;
 }
@@ -84,6 +85,8 @@ $color_lobby: #3694d1;
      border: none!important;
      outline:none 
 }
+
+
  .regbutton:focus {
      outline:none;
 }
@@ -608,11 +611,14 @@ $color_lobby: #3694d1;
 #detailsModal {
   padding: 0 10px !important;
   z-index: 10000;
+  overflow:hidden;
   .modal-dialog {
     max-width: 1000px;
   }
   .modal-content {
     border-radius: 2px;
+	max-height:90vh;
+	overflow-y:auto;
   }
   .modal-header {
     padding: 20px 20px;
@@ -1133,3 +1139,22 @@ height:100%;}
     }
   }
 }
+/* Style the drop button */
+#cloud-download {
+    font-size: 31px;
+    color: white;
+}
+@media only screen and (max-width: 768px) {
+  #cloud-download  {
+    font-size: 23px;
+    color: white;
+}
+} 
+#navbarDropdown {color:white}
+
+#download-buttons {display:flex;justify-content:space-evenly}
+.blue {
+  color: #3695d8!important;
+}
+
+

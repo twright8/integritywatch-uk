@@ -45,8 +45,8 @@ var vuedata = {
   travelFilter: 'all',
   charts: {
     level: {
-      title: 'MINISTERIAL LEVEL',
-      info: 'This pie chart shows the proportion of meetings hosted by the level of Ministerial office. Click on the pie chart to filter the rest of the tool by the level of Ministerial office.'
+      title: 'POSITION',
+      info: 'This pie chart shows the proportion of meetings hosted by political position. Click on the pie chart to filter the rest of the tool by position.'
     },
     department: {
       title: 'Top 10 Departments',
@@ -465,6 +465,7 @@ function updateButtonStyles() {
     var buttonId = filterValue === 'Scottish lobbying register' ? 'filter-source-button-scot' : 'filter-source-button-uk';
     var button = document.getElementById(buttonId);
     button.style.backgroundColor = isActive ? '#3694d1' : '#D3D3D3';
+	button.style.boxShadow = isActive ? '0 2px 4px rgba(0, 0, 0, 0.5)' : 'none';
     button.disabled = false; // Re-enable the button after processing
   });
 }
@@ -1160,3 +1161,18 @@ $('.reset-btn').click(function(){
 }).catch(error => {
     console.error('There was a problem with the fetch operation:', error);
   });
+function toggleDropup() {
+  const downloadDropdown = document.getElementById('download-dropdown'); // Target specific dropdown
+  if (window.innerWidth <= 992) {
+    downloadDropdown.classList.add('dropup');
+  } else {
+    downloadDropdown.classList.remove('dropup');
+  }
+}
+
+// Listen for window resize events
+window.addEventListener('resize', toggleDropup);
+
+// Initial check on page load
+window.addEventListener('DOMContentLoaded', toggleDropup);
+

@@ -40,7 +40,7 @@ Open Access UK includes a range of functions, allowing users to:
 <li> share links to specific meetings on social media</li>
 <li> submit pre-populated freedom of information requests via  WhatDoTheyKnow.com</li><br>
 
-                <p>The tool does not currently include meetings with UK Government ministers’ special advisers or senior civil servants, or data from the UK statutory register of lobbyists. If you would like to fund us to collect this data then please <a href="http://www.transparency.org.uk/who-we-are/contact-us/#.WsyhqC7waUk">contact us</a>.</p>
+                <p>The tool does not currently include meetings with UK Government ministers’ special advisers or senior civil servants, or data from the UK statutory register of lobbyists. If you would like to fund us to collect this data then please <a href="http://www.transparency.org.uk/who-we-are/contact-us/#.WsyhqC7waUk">contact us</a>.</p><p>We used GIST embeddings (<a href="https://arxiv.org/abs/2402.16829">arXiv:2402.16829</a>), a Large Language Model (LLM) AI, alongside SetFit (<a href= "https://arxiv.org/abs/2209.11055">arXiv:2209.11055</a>), to train the AI on the topics of lobbying meetings. This fine-tuned model is then applied to newly released meetings data to categorise it. Although this method has very high accuracy, the non-supervised approach may occasionally result in false positives and false negatives.</p>
               </div>
             </div>
           </div>
