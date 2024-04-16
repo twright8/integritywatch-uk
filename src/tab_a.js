@@ -552,7 +552,7 @@ filters.forEach(filter => {
 
 //chart 1
   var createLevelChart = function() {
-    var order = ['Minister', 'MSP', 'Special advisor', 'Senior civil servant', 'Others']
+    var order = ['Minister', 'MSP', 'Special advisor', 'Senior civil servant']
     var chart = charts.level.chart;
     var dimension = ndx.dimension(function (d) {
       return d.ministerialLevel;
@@ -766,7 +766,18 @@ var createDepartmentChart = function() {
           "targets": 2,
           "defaultContent":"N/A",
           "data": function(d) {
-            return d.policy_level;
+            switch(d.policy_level) {
+                    case 1:
+                        return "Minister";
+                    case 2:
+                        return "MSP";  // Member of Scottish Parliament
+                    case 3:
+                        return "Special advisor";
+                    case 4:
+                        return "Senior civil servant";
+                    default:
+                        return "Not specified";  // Default case if none of the above
+                }
           }
         },
         {

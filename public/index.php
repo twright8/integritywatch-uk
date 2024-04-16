@@ -130,7 +130,7 @@ This is a user-friendly interactive database that provides a unique overview of 
                     <tr class="header">
                       <th class="header">No</th> 
                       <th class="header">Host</th>
-                      <th class="header">Position</th>
+                      <th class="header">Role</th>
                       <th class="header">Office</th> 
                       <th class="header">Purpose</th> 
                       <th class="header">Lobbyist</th> 
