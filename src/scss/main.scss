@@ -76,6 +76,12 @@ $color_lobby: #3694d1;
      color: black;
      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
 }
+.chart-title {
+    white-space: nowrap;  /* Prevents the title from wrapping */
+    overflow: hidden;     /* Keeps the text from spilling over the container width */
+    text-overflow: ellipsis;  /* Adds an ellipsis if the text is too long to fit */
+	padding-right:5px
+}
 
  .filter-button:focus {
      outline:none;
@@ -1086,12 +1092,14 @@ height:100%;}
   padding: 20px 0;
   @media only screen and (max-width: 769px) {
     font-size: 13px;
+	padding:2px;
   }
   input {
-    padding: 5px;
     max-width: 30%;
     @media only screen and (max-width: 950px) {
       max-width: 25%;
+	  	padding:2px;
+
     }
   }
   button {
