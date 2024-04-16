@@ -1011,6 +1011,7 @@ for(var i = 0; i < buttons.length; i++) {
     buttons[i].classList.remove('active');
     // Change the background color to #D3D3D3
     buttons[i].style.backgroundColor = '#D3D3D3';
+	buttons[i].style.boxShadow = "none";
 }
   // Call the function that updates the dimension filter based on activeFilters
   updateDimensionFilter();
@@ -1020,7 +1021,8 @@ for(var i = 0; i < buttons.length; i++) {
     const button = document.querySelector(`[data-filter="${filter}"]`);
     if(button) {
       button.classList.remove('active');
-      button.style.backgroundColor = ''; // Reset to default, adjust as necessary
+      button.style.backgroundColor = '';
+	  button.style.boxShadow = '';
     }
   });	 
 
