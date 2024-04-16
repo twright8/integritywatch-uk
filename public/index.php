@@ -8,8 +8,8 @@
     <!-- Twitter and og meta here -->
     <meta property="og:url" content="https://openaccess.transparency.org.uk" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Open Access UK: monitor lobbying meetings with Government" />
-    <meta property="og:description" content="Who’s #lobbying the UK Government? Check Open Access UK" />
+    <meta property="og:title" content="Open Access UK: monitor lobbying meetings with in the UK" />
+    <meta property="og:description" content="Who’s #lobbying the UK? Check Open Access UK" />
     <!-- <meta property="og:image" content="https://openaccess.transparency.org.uk/images/thumbnail.png" /> -->
     <meta property="og:image" content="http://www.chiaragirardelli.net/iw-uk-new/images/thumbnail.png" />
     <link rel='shortcut icon' type='image/x-icon' href='./favicon.ico' />
@@ -46,39 +46,39 @@ This is a user-friendly interactive database that provides a unique overview of 
           <!-- CHARTS - FIRST ROW - LEFT -->
 		  
 
-          <div class="col-md-6 chart-subrow">
+          <div class="col-md-9 chart-subrow">
             <div class="row chart-subrow-row">
               <div class="col-md-12 subrow-title-container">
-                <div class="subrow-title">GOVERNMENT</div>
+                <div class="subrow-title">PUBLIC OFFICE</div>
               </div>
-              <div class="col-md-6 chart-col">
+              <div class="col-md-4 chart-col">
                 <div class="boxed-container chart-container tab_a_1">
                   <chart-header :title="charts.level.title" :info="charts.level.info" ></chart-header>
                   <div class="chart-inner" id="level_chart"></div>
                 </div>
               </div>
-              <div class="col-md-6 chart-col">
+              <div class="col-md-4 chart-col">
                 <div class="boxed-container chart-container tab_a_2">
                   <chart-header :title="charts.department.title" :info="charts.department.info" ></chart-header>
                   <div class="chart-inner" id="department_chart"></div>
                 </div>
               </div>
-
-            </div>
-          </div>
-          <!-- CHARTS - FIRST ROW - RIGHT -->
-          <div class="col-md-6 chart-subrow">
-            <div class="row chart-subrow-row">
-              <div class="col-md-12 subrow-title-container subrow-title-container-right">
-                <div class="subrow-title subrow-title-right">LOBBYIST</div>
-              </div>
-              <div class="col-md-6 chart-col">
+              <div class="col-md-4 chart-col">
                 <div class="boxed-container chart-container tab_a_4">
                   <chart-header :title="charts.hosts.title" :info="charts.hosts.info" ></chart-header>
                   <div class="chart-inner" id="hosts_chart"></div>
                 </div>
               </div>
-              <div class="col-md-6 chart-col">
+            </div>
+          </div>
+          <!-- CHARTS - FIRST ROW - RIGHT -->
+          <div class="col-md-3 chart-subrow">
+            <div class="row chart-subrow-row">
+              <div class="col-md-12 subrow-title-container subrow-title-container-right">
+                <div class="subrow-title subrow-title-right">LOBBYIST</div>
+              </div>
+
+              <div class="col-md-12 chart-col">
                 <div class="boxed-container chart-container tab_a_5">
                   <chart-header :title="charts.organizations.title" :info="charts.organizations.info" ></chart-header>
                   <div class="chart-inner" id="organizations_chart"></div>

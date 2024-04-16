@@ -45,12 +45,12 @@ var vuedata = {
   travelFilter: 'all',
   charts: {
     level: {
-      title: 'POSITION',
-      info: 'This pie chart shows the proportion of meetings hosted by political position. Click on the pie chart to filter the rest of the tool by position.'
+      title: 'Role',
+      info: 'This pie chart shows the proportion of meetings hosted by political role. Click on the pie chart to filter the rest of the tool by role.'
     },
     department: {
-      title: 'Top 10 Departments',
-      info: 'Filter by department.'
+      title: 'Top 10 Public offices',
+      info: 'Filter by public office.'
     },
     hosts: {
       title: 'TOP 10 HOSTS',
@@ -295,34 +295,29 @@ csv('./data/wdtk_departments.csv?' + randomPar, (err, wdtkDepartments) => {
   _.each(events, function (d) {
     if(!d.purpose){
       d.purpose = "";
-    }
+    }	
     //d.RecordId = RecordId;
     d.date1 = d.date;
     if(d.date != ""){
       d.date = parseDate(d.date);
     }
-    d.policy_level = d.policy_level.trim	();
+
     d.portfolio = '';
     d.ministerialLevel = "Others";
     switch(d.policy_level) {
-      case 'Prime Minister':
-        d.ministerialLevel = 'Prime Minister';
+      case 1:
+        d.ministerialLevel = 'Minister';
         break;
-      case 'Chancellor of the Exchequer':
-        d.ministerialLevel = 'Chancellor of the Exchequer';
+      case 2:
+        d.ministerialLevel = 'MSP';
         break;
-      case 'Secretary of State':
-        d.ministerialLevel = 'Secretary of State';
+      case 3:
+        d.ministerialLevel = 'Special advisor';
         break;
-      case 'Minister of State':
-        d.ministerialLevel = 'Minister of State';
+      case 4:
+        d.ministerialLevel = 'Senior civil servant';
         break;
-      case 'Parliamentary Under-Secretary':
-        d.ministerialLevel = 'Parliamentary Under-Secretary';
-        break;
-	  case 'First Minister':
-        d.ministerialLevel = 'First Minister';
-        break;
+
       default:
         d.ministerialLevel = "Others";
     };
@@ -557,7 +552,7 @@ filters.forEach(filter => {
 
 //chart 1
   var createLevelChart = function() {
-    var order = ['Prime Minister', 'Chancellor of the Exchequer', 'Secretary of State', 'Minister of State', 'Parliamentary Under-Secretary', 'First Minister',  'Others']
+    var order = ['Minister', 'MSP', 'Special advisor', 'Senior civil servant', 'Others']
     var chart = charts.level.chart;
     var dimension = ndx.dimension(function (d) {
       return d.ministerialLevel;
@@ -583,7 +578,7 @@ filters.forEach(filter => {
       })
       .dimension(dimension)
       .ordering(function(d) { return order.indexOf(d.key)})
-      .ordinalColors(["#981b48", "#b7255a", "#d73771", "#ec5189", "#ec7ca6", "#9B72AA", "#ccc"])
+      .ordinalColors(["#981b48", "#b7255a", "#d73771", "#ec5189", "#ccc"])
       /*
       .colorCalculator(function(d, i) {
         return vuedata.colors.institutionsTypes[d.key];
@@ -751,6 +746,7 @@ var createDepartmentChart = function() {
           "orderable": false,
           "targets": 0,   
           data: function ( row, type, val, meta ) {
+			   
             return count;
           }
         },
@@ -788,6 +784,7 @@ var createDepartmentChart = function() {
           "targets": 4,
           "defaultContent":"N/A",
           "data": function(d) {
+			  return d.purpose.replace(/\n/g, "<br>");
             return d.purpose;
           }
         },
