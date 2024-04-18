@@ -105,15 +105,15 @@ This is a user-friendly interactive database that provides a unique overview of 
 			  <chart-header :title="'Registry'" :info="'Click to filter meetings based on the source of the data. Choose from UK Government disclosures, the Scottish lobbying register, or both.'"></chart-header>
 			  <div class="button-container">
 			  
-			  <button id="filter-source-button-uk" class="regbutton filter-button"><strong>UK</strong></button>
-			  <button id="filter-source-button-scot" class="regbutton filter-button"><strong>SCOTLAND</strong></button>
+			  <button id="filter-source-button-uk" class="regbutton"><strong>UK</strong></button>
+			  <button id="filter-source-button-scot" class="regbutton"><strong>SCOTLAND</strong></button>
 			  </div>
 			  </div>
 			  </div>
 			  			  <div class="col-md-3 chart-col resizer">
 			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'TOPIC'" :info="'Click on the icons below to filter results to a topic area. Blue means that the filter is active. Select as many topics as you want. De-selecting all topic filters shows all the data.'"></chart-header>
-			  					<div class="button-container " id="filter-buttons">
+			  <chart-header :title="'TOPIC'" :info="'Click the icons below to filter lobbying meetings based on whether their descriptions relate to different topics (e.g. Climate or Health). The icon buttons turn blue to indicate its filter is active. You can activate multiple filters at once. If no filters are selected, all meetings will be displayed'"></chart-header>
+			  					<div class="button-container" id="filter-buttons">
     <!-- Buttons will be dynamically inserted here -->
 </div>
 

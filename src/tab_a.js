@@ -50,7 +50,7 @@ var vuedata = {
     },
     department: {
       title: 'Top 10 Public offices',
-      info: 'Filter by public office.'
+      info: 'This bar chart shows the hosts which public offices have had the most contact with lobby organisations. Click on the bar chart to filter the rest of the tool by public office. Note: Due to issues with the source data, when UK Government hosts meet several lobby organisations in a single meeting, the tool counts it as one single meeting. The number of contacts with individual lobbyists can therefore be higher than the number of meetings diplayed on this portal.'
     },
     hosts: {
       title: 'TOP 10 HOSTS',
@@ -794,10 +794,10 @@ var createDepartmentChart = function() {
           "orderable": true,
           "targets": 4,
           "defaultContent":"N/A",
-          "data": function(d) {
-			  return d.purpose.replace(/\n/g, "<br>");
-            return d.purpose;
-          }
+    "data": function(d) {
+        // Check if 'purpose' exists and is not null, then replace newlines; otherwise, return 'N/A'
+        return d.purpose ? d.purpose.replace(/\n/g, "<br>") : "N/A";
+    }
         },
         {
           "searchable": false,

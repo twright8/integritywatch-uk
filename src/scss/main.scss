@@ -40,8 +40,6 @@ $color_lobby: #3694d1;
      row-gap: 10px;
      column-gap:1px;
      justify-content: space-evenly;
-    /* align-items: flex-end;
-     */
      flex-direction: row;
      flex-wrap: nowrap;
 }
@@ -1089,17 +1087,17 @@ height:100%;}
 
 /* DATEPICKER */
 .datefilter-container {
+	margin:2px;
   padding: 20px 0;
   @media only screen and (max-width: 769px) {
     font-size: 13px;
-	padding:2px;
+
   }
   input {
+    padding: 5px;
     max-width: 30%;
     @media only screen and (max-width: 950px) {
       max-width: 25%;
-	  	padding:2px;
-
     }
   }
   button {
@@ -1165,4 +1163,34 @@ height:100%;}
   color: #3695d8!important;
 }
 
+.regbutton:hover {
+     background: #1a6a9e;
+     border: none!important;
+     outline:none
+}
+ .regbutton{
+     width: 100%;
+     margin: 5px;
+     height: 36px;
+     outline:none;
+     padding: 0;
+     // Adjust padding as necessary to fit the icon nicely display: flex;
+     justify-content: center;
+     align-items: center;
+     border: none;
+     border-radius: 2px;
+     cursor: pointer;
+     font-size: 16px;
+     background: #D3D3D3;
+}
+ .regbutton.active {
+     background-color: #3694d1!important;
+     outline:none;
+     border: none!important;
+     color: black;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
+}
 
+ .regbutton:focus {
+     outline:none;
+}
