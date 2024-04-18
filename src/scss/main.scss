@@ -1194,3 +1194,32 @@ height:100%;}
  .regbutton:focus {
      outline:none;
 }
+
+.dis-label{
+color:white;
+text-transform: uppercase;
+    grid-column: 2; /* Places the middle item in the second column */
+    justify-self: center;
+	margin-left:-10px;
+	display:none;
+	
+}
+
+@media only screen and (max-width: 767px) {
+.filter-button {
+    display: grid;
+    grid-template-columns: auto 1fr auto; 
+    justify-items: start; 
+    width: 100%; 
+	max-width:none;
+}
+.icon-white {
+grid-column: 1;
+margin-left:10px;
+}
+
+.button-container {flex-wrap:wrap}
+.hasDatepicker{margin:2px}
+.dis-label{
+display:block;
+}}

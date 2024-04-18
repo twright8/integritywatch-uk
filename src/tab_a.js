@@ -504,15 +504,16 @@ const filterIcons = {
   Climate: 'leaf',
   "Financial Services": 'piggy-bank',
   Health: 'heart-pulse',
-  Technology: 'microchip',
+  Smoking: 'smoking',
   Defence: 'shield-halved',
 };
 // Setup buttons
-const filters = ['Climate', 'Financial Services', 'Health', 'Technology', 'Defence']; // Example filters
+const filters = ['Climate', 'Financial Services', 'Health', 'Smoking', 'Defence']; // Example filters
 filters.forEach(filter => {
   const button = document.createElement('button');
   const iconName = filterIcons[filter];
-  button.innerHTML = `<i class="fa fa-${iconName} icon-white"></i>`; // Apply 'icon-white' class
+  button.innerHTML = `<i class="fa fa-${iconName} icon-white"></i><strong class="dis-label">${filter}</strong>`; // Apply 'icon-white' class
+
   button.classList.add('filter-button');
   button.dataset.filter = filter;
   button.title = filter; // Set the tooltip text to the filter name
@@ -541,11 +542,11 @@ filters.forEach(filter => {
         requestAnimationFrame(() => {
           this.disabled = false;
           vuedata.loader = false;
+
         });
       }, 0); // Execute the deferred logic immediately after the current call stack clears
     });
   });
-
   document.getElementById('filter-buttons').appendChild(button);
 });
 

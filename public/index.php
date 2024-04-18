@@ -113,9 +113,10 @@ This is a user-friendly interactive database that provides a unique overview of 
 			  			  <div class="col-md-3 chart-col resizer">
 			  <div class="boxed-container chart-container tab_a_3">
 			  <chart-header :title="'TOPIC'" :info="'Click the icons below to filter lobbying meetings based on whether their descriptions relate to different topics (e.g. Climate or Health). The icon buttons turn blue to indicate its filter is active. You can activate multiple filters at once. If no filters are selected, all meetings will be displayed'"></chart-header>
-			  					<div class="button-container" id="filter-buttons">
-    <!-- Buttons will be dynamically inserted here -->
-</div>
+<div id="filter-buttons" class="button-container">
+  </div>
+
+
 
 			  </div>
 			  </div>
