@@ -64,7 +64,7 @@ var vuedata = {
       chart: null,
       type: 'table',
       title: 'Results',
-      info: 'This table presents a list of meetings based on the filters you apply. Use the filters above to refine this view.'
+      info: 'This table presents a list of meetings based on the filters you apply. Use the filters above to refine this view.For meetings with multiple hosts, each host is listed separately in the Scotland registry with all other meeting details remaining unchanged. You can see other hosts (if there are any) of the same meeting by clicking on the row'
     }
   },
   selectedElement: { "P": "", "Sub": ""},
@@ -982,6 +982,18 @@ function throttle() {
   });
   
 
+function resetDatePickers() {
+  var defaultStartDate = "01/01/2012";
+  var defaultEndDate = currentDate("/");  // Calls the existing function to get the current date
+
+  // Set the value of the datepickers
+  $("#from").datepicker("setDate", defaultStartDate);
+  $("#to").datepicker("setDate", defaultEndDate);
+
+  // Update the internal variables to match the reset values
+  inidate = $("#from").datepicker("getDate");
+  enddate = $("#to").datepicker("getDate");
+}
 
 // Reset charts and filters
 var resetGraphs = function() {
@@ -1042,7 +1054,7 @@ $('.reset-btn').click(function(){
       // Defer the rest of the logic
       setTimeout(() => {
   resetGraphs();
-
+resetDatePickers();
         // Schedule the UI update to hide the loader and re-enable the button
         requestAnimationFrame(() => {
           this.disabled = false;

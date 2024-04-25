@@ -172,7 +172,7 @@ This is a user-friendly interactive database that provides a unique overview of 
                     <div class="details-line"><span class="details-line-title">Purpose:</span> {{ selectedElement.purpose }}</div>
 					<div class="details-line" v-if="selectedElement.tag"><span class="details-line-title">Topic:</span> {{ selectedElement.tag}}</div>
 
-					<div class="details-line" v-if="selectedElement.others_at_the_meeting"><span class="details-line-title">Participants:</span> {{ selectedElement.others_at_the_meeting}}</div>
+					<div class="details-line" v-if="selectedElement.others_at_the_meeting"><span class="details-line-title">Other hosts:</span> {{ selectedElement.others_at_the_meeting}}</div>
 					<div class="details-line"><span class="details-line-title">Registry:</span> {{ selectedElement.portal_source }}</div>
 					<div class="details-line" v-if="selectedElement.source">
   <span class="details-line-title">Link:</span>
@@ -194,7 +194,7 @@ This is a user-friendly interactive database that provides a unique overview of 
       <!-- Bottom bar -->
       <div class="container-fluid footer-bar">
         <div class="row">
-          <div class="footer-col col-12 col-sm-12 footer-counts">
+          <div class="footer-col col-12 col-sm-12 footer-counts">			  
             <div class="dc-data-count count-box">
               <div class="filter-count">0</div>out of <strong class="total-count">0</strong> meetings
             </div>
