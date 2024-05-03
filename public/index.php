@@ -166,7 +166,7 @@ This is a user-friendly interactive database that provides a unique overview of 
                     <!-- Meeting details -->
                     <div class="details-line"><span class="details-line-title">Date:</span> {{ selectedElement.date1 }}</div>
                     <div class="details-line"><span class="details-line-title">Host:</span> {{ selectedElement.rep_new }}</div>
-                    <div class="details-line"><span class="details-line-title">Position:</span> {{ selectedElement.policy_level }}</div>
+                    <div class="details-line"><span class="details-line-title">Position:</span> {{ selectedElement.ministerialLevel }}</div>
                     <div class="details-line"><span class="details-line-title">Office:</span> {{ selectedElement.department }}</div>
                     <div class="details-line"><span class="details-line-title">Lobbyist:</span> {{ selectedElement.organisation }}</div>
                     <div class="details-line"><span class="details-line-title">Purpose:</span> {{ selectedElement.purpose }}</div>
