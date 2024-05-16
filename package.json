@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
     "crossfilter2": "^1.4.6",
     "d3": "^5.9.1",
     "d3-request": "^1.0.6",
@@ -17,7 +19,7 @@
   },
   "scripts": {
     "dev": "parcel watch ./src/*.js -d public/static --no-source-maps",
-  "build": "parcel build ./src/*.js -d public/static --no-source-maps"
+    "build": "parcel build ./src/*.js -d public/static --no-source-maps"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.5.2",

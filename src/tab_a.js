@@ -416,6 +416,8 @@ var activeFilters = {
   'UK Government': false
 };
 
+var activeTagFilters = []; 
+
 // Function to initialize button states and event listeners
 function initializeButton(buttonId, filterValue) {
   var button = document.getElementById(buttonId);
@@ -432,25 +434,32 @@ function initializeButton(buttonId, filterValue) {
     });
   });
 }
-
-// Applies active filters to the dimension and updates the UI accordingly
 function applyFilters() {
-  var activeFilterValues = Object.keys(activeFilters).filter(key => activeFilters[key]);
+  var activeSourceFilterValues = Object.keys(activeFilters).filter(key => activeFilters[key]);
 
-  // Filter data based on active filters
-  if (activeFilterValues.length === 0) {
+  // Filter data based on active source filters
+  if (activeSourceFilterValues.length === 0) {
     sourceDimension.filterAll();
   } else {
     sourceDimension.filter(function(d) {
-      return activeFilterValues.includes(d);
+      return activeSourceFilterValues.includes(d);
     });
   }
 
+  // Also apply the active tag filters
+  if (activeTagFilters.length === 0) {
+    tagDimension.filterAll();
+  } else {
+    tagDimension.filter(function(d) {
+      return activeTagFilters.includes(d);
+    });
+  }
+dc.redrawAll();
   // Update button styles and disable loader after UI updates
   setTimeout(() => {
     updateButtonStyles();
     Vue.set(vuedata, 'loader', false); // Hide loader after updating the UI
-    dc.redrawAll(); // Redraw charts with the new filter
+     // Redraw charts with the new filter
   }, 0);
 }
 
@@ -465,10 +474,6 @@ function updateButtonStyles() {
   });
 }
 
-// Initialize buttons with their respective filter values
-initializeButton('filter-source-button-scot', 'Scottish lobbying register');
-initializeButton('filter-source-button-uk', 'UK Government');
-
 
 
 var tagDimension = ndx.dimension(function (d) {
@@ -476,77 +481,58 @@ var tagDimension = ndx.dimension(function (d) {
 });
 
 // Initial state of the filters
-var activeFilters = [];
 
-// Function to update the dimension filter based on active filters
-function updateDimensionFilter() {
-  if (activeFilters.length === 0) {
-    tagDimension.filterAll();
-  } else {
-    tagDimension.filter(function (d) {
-      return activeFilters.includes(d);
-    });
-  }
-  dc.redrawAll();
-}
+
 
 // Function to toggle the filter state
 function toggleFilterState(filter) {
-  const index = activeFilters.indexOf(filter);
+  const index = activeTagFilters.indexOf(filter);
   if (index === -1) {
-    activeFilters.push(filter);
+    activeTagFilters.push(filter);
   } else {
-    activeFilters.splice(index, 1);
+    activeTagFilters.splice(index, 1);
   }
-  updateDimensionFilter();
+
+  applyFilters(); // Use the updated applyFilters function
 }
+initializeButton('filter-source-button-scot', 'Scottish lobbying register');
+initializeButton('filter-source-button-uk', 'UK Government');
+
 const filterIcons = {
   Climate: 'leaf',
   "Financial Services": 'piggy-bank',
   Health: 'heart-pulse',
-  Smoking: 'smoking',
+  Housing: 'house',
   Defence: 'shield-halved',
 };
-// Setup buttons
-const filters = ['Climate', 'Financial Services', 'Health', 'Smoking', 'Defence']; // Example filters
+const filters = ['Climate', 'Financial Services', 'Health', 'Housing', 'Defence'];
+
 filters.forEach(filter => {
   const button = document.createElement('button');
   const iconName = filterIcons[filter];
-  button.innerHTML = `<i class="fa fa-${iconName} icon-white"></i><strong class="dis-label">${filter}</strong>`; // Apply 'icon-white' class
-
+  button.innerHTML = `<i class="fa fa-${iconName} icon-white"></i><strong class="dis-label">${filter}</strong>`;
   button.classList.add('filter-button');
   button.dataset.filter = filter;
-  button.title = filter; // Set the tooltip text to the filter name
+  button.title = filter;
 
   button.addEventListener('click', function () {
-    // Disable button immediately to prevent multiple clicks
     this.disabled = true;
-    
-    // Use requestAnimationFrame to ensure loader is shown in the next frame
     requestAnimationFrame(() => {
-      vuedata.loader = true; // Show loader
+      vuedata.loader = true;
 
-      // Defer the rest of the logic
       setTimeout(() => {
         const filter = this.dataset.filter;
         toggleFilterState(filter);
-        this.classList.toggle('active'); // Toggle a class that changes the button's appearance
-
-        if (this.classList.contains('active')) {
-          this.style.backgroundColor = '#3694d1'; // Example active color
-        } else {
-          this.style.backgroundColor = ''; // Reset to default
-        }
-
-        // Schedule the UI update to hide the loader and re-enable the button
+        this.classList.toggle('active');
+        this.style.backgroundColor = this.classList.contains('active') ? '#3694d1' : '';
         requestAnimationFrame(() => {
           this.disabled = false;
           vuedata.loader = false;
-
         });
-      }, 0); // Execute the deferred logic immediately after the current call stack clears
+      }, 0);
     });
   });
+
   document.getElementById('filter-buttons').appendChild(button);
 });
 
@@ -994,10 +980,9 @@ function resetDatePickers() {
   inidate = $("#from").datepicker("getDate");
   enddate = $("#to").datepicker("getDate");
 }
-
 // Reset charts and filters
 var resetGraphs = function() {
-	
+  // Resetting charts that are not tables
   for (var c in charts) {
     if(charts[c].type !== 'table' && charts[c].chart.hasFilter()){
       charts[c].chart.filterAll();
@@ -1005,64 +990,68 @@ var resetGraphs = function() {
   }
 
   // Resetting sourceDimension and tagDimension filters
-  sourceDimension.filter(null);
-
-
-
+  sourceDimension.filterAll();
+  tagDimension.filterAll();
 
   // Additional resets you might have
-  searchDimension.filter(null);
-  dateEvent.filter(null);
+  searchDimension.filterAll();
+  dateEvent.filterAll();
   $('#search-input').val('');
-    // Clear the activeFilters array
-  activeFilters = [];
-var buttons = document.getElementsByClassName('regbutton');
 
-// Loop through the NodeList of selected elements
-for(var i = 0; i < buttons.length; i++) {
-    // For each element, remove the 'active' class
-    buttons[i].classList.remove('active');
-    // Change the background color to #D3D3D3
-    buttons[i].style.backgroundColor = '#D3D3D3';
-	buttons[i].style.boxShadow = "none";
-}
-  // Call the function that updates the dimension filter based on activeFilters
-  updateDimensionFilter();
+  // Clear the activeSourceFilters object and activeTagFilters array
+  activeFilters = {
+    'Scottish lobbying register': false,
+    'UK Government': false
+  };
+  activeTagFilters = [];
 
   // Reset all filter buttons to default state
+  var buttons = document.getElementsByClassName('regbutton');
+  for(var i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove('active');
+    buttons[i].style.backgroundColor = '#D3D3D3';
+    buttons[i].style.boxShadow = "none";
+  }
+
+  // Reset all tag filter buttons to default state
   filters.forEach(filter => {
     const button = document.querySelector(`[data-filter="${filter}"]`);
     if(button) {
       button.classList.remove('active');
       button.style.backgroundColor = '';
-	  button.style.boxShadow = '';
+      button.style.boxShadow = '';
     }
-  });	 
+  });
+
+  // Apply the reset filters and update the UI
+  applyFilters();
 
   // Redraw all charts to reflect the current state
   dc.redrawAll();
 }
 
 // Attaching the reset function to the reset button's click event
-$('.reset-btn').click(function(){
-	    this.disabled = true;
-    
-    // Use requestAnimationFrame to ensure loader is shown in the next frame
-    requestAnimationFrame(() => {
-      vuedata.loader = true; // Show loader
+$('.reset-btn').click(function() {
+  this.disabled = true;
 
-      // Defer the rest of the logic
-      setTimeout(() => {
-  resetGraphs();
-resetDatePickers();
-        // Schedule the UI update to hide the loader and re-enable the button
-        requestAnimationFrame(() => {
-          this.disabled = false;
-          vuedata.loader = false;
-        });
-      }, 0); // Execute the deferred logic immediately after the current call stack clears
-    });
+  // Use requestAnimationFrame to ensure loader is shown in the next frame
+  requestAnimationFrame(() => {
+    vuedata.loader = true; // Show loader
+
+    // Defer the rest of the logic
+    setTimeout(() => {
+      resetGraphs();
+      resetDatePickers(); // If you have a separate function for date pickers
+
+      // Schedule the UI update to hide the loader and re-enable the button
+      requestAnimationFrame(() => {
+        this.disabled = false;
+        vuedata.loader = false;
+      });
+    }, 0); // Execute the deferred logic immediately after the current call stack clears
   });
+});
+
 
   var downloadStart = performance.now();
 
@@ -1199,3 +1188,23 @@ window.addEventListener('resize', toggleDropup);
 // Initial check on page load
 window.addEventListener('DOMContentLoaded', toggleDropup);
 
+document.addEventListener('DOMContentLoaded', function () {
+    var popup = document.getElementById('popup');
+    var close = document.querySelector('.close');
+
+    // Check if the visitor has already visited
+    if (document.cookie.indexOf('visited=true') === -1) {
+        // Show the popup if no 'visited' cookie found
+        popup.style.display = 'flex';
+
+        // Set a cookie for 30 days
+        var expiry = new Date();
+        expiry.setTime(expiry.getTime() + (60*60*1000));
+        document.cookie = "visited=true; expires=" + expiry.toUTCString() + "; path=/";
+    }
+
+    // Close the popup and prevent it from showing again on refresh
+    close.onclick = function() {
+        popup.style.display = 'none';
+    };
+});

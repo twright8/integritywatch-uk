@@ -21,28 +21,59 @@
     <link rel="stylesheet" href="static/tab_a.css">
 </head>
 <body>
-    <div id="app" class="tabA">   
-      <?php include 'header.php' ?>
-      <div class="container-fluid dashboard-container-outer">
-        <div class="row dashboard-container">
-          <!-- ROW FOR INFO AND SHARE -->
-          <div class="col-md-12">
-            <div class="row">
-              <!-- INFO -->
-              <div class="col-md-8 chart-col" v-if="showInfo">
-                <div class="boxed-container description-container">
-                  <h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
+	  <div id="popup" class="popup ">
+    <div class="popup-content description-container">
+        <span class="close" style="cursor: pointer;">&times;</span>
+                          <h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
                   <p>
                     
 This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament. 
 
                     <a href="about.php">Read more</a>.
                   </p> 
-                  <i class="material-icons close-btn" @click="showInfo = false">close</i>
+    </div>
+</div>
+    <div id="app" class="tabA">   
+      <?php include 'header.php' ?>
+
+      <div class="container-fluid dashboard-container-outer">
+        <div class="row dashboard-container">
+
+		                <div class="col-md-6 chart-col" id="dater">
+			  
+                <div class="boxed-container chart-container tab_a_3">
+                  <chart-header :title="'DATE'" :info="'Click to filter meetings based on their date. Click \'' + 'Filter' + '\' when you have selected the date range you want to apply.'"></chart-header>
+                  <div class="datefilter-container">
+                    <label for="from">From</label>
+                    <input type="text" id="from" name="from">
+                    <label for="to">to</label>
+                    <input type="text" id="to" name="to">
+                    <button id="datefilter"><strong>FILTER</strong></button>
+                  </div>
+				  
                 </div>
               </div>
-            </div>
-          </div>
+			  <div class="col-md-3 chart-col resizer">
+			  <div class="boxed-container chart-container tab_a_3">
+			  <chart-header :title="'Registry'" :info="'Click to filter meetings based on the source of the data. Choose from UK Government disclosures, the Scottish lobbying register, or both.'"></chart-header>
+			  <div class="button-container">
+			  
+			  <button id="filter-source-button-uk" class="regbutton"><strong>UK</strong></button>
+			  <button id="filter-source-button-scot" class="regbutton"><strong>SCOTLAND</strong></button>
+			  </div>
+			  </div>
+			  </div>
+			  			  <div class="col-md-3 chart-col resizer">
+			  <div class="boxed-container chart-container tab_a_3">
+			  <chart-header :title="'TOPIC'" :info="'Click the icons below to filter lobbying meetings based on whether their descriptions relate to different topics (e.g. Climate or Health). The icon buttons turn blue to indicate its filter is active. You can activate multiple filters at once. If no filters are selected, all meetings will be displayed'"></chart-header>
+<div id="filter-buttons" class="button-container">
+  </div>
+
+
+
+			  </div>
+			  </div>
+
           <!-- CHARTS - FIRST ROW - LEFT -->
 		  
 
@@ -86,41 +117,6 @@ This is a user-friendly interactive database that provides a unique overview of 
               </div>
             </div>
           </div>
-		                <div class="col-md-6 chart-col" id="dater">
-			  
-                <div class="boxed-container chart-container tab_a_3">
-                  <chart-header :title="'DATE'" :info="'Click to filter meetings based on their date. Click \'' + 'Filter' + '\' when you have selected the date range you want to apply.'"></chart-header>
-                  <div class="datefilter-container">
-                    <label for="from">From</label>
-                    <input type="text" id="from" name="from">
-                    <label for="to">to</label>
-                    <input type="text" id="to" name="to">
-                    <button id="datefilter"><strong>FILTER</strong></button>
-                  </div>
-				  
-                </div>
-              </div>
-			  <div class="col-md-3 chart-col resizer">
-			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'Registry'" :info="'Click to filter meetings based on the source of the data. Choose from UK Government disclosures, the Scottish lobbying register, or both.'"></chart-header>
-			  <div class="button-container">
-			  
-			  <button id="filter-source-button-uk" class="regbutton"><strong>UK</strong></button>
-			  <button id="filter-source-button-scot" class="regbutton"><strong>SCOTLAND</strong></button>
-			  </div>
-			  </div>
-			  </div>
-			  			  <div class="col-md-3 chart-col resizer">
-			  <div class="boxed-container chart-container tab_a_3">
-			  <chart-header :title="'TOPIC'" :info="'Click the icons below to filter lobbying meetings based on whether their descriptions relate to different topics (e.g. Climate or Health). The icon buttons turn blue to indicate its filter is active. You can activate multiple filters at once. If no filters are selected, all meetings will be displayed'"></chart-header>
-<div id="filter-buttons" class="button-container">
-  </div>
-
-
-
-			  </div>
-			  </div>
-
           <!-- TABLE -->
           <div class="col-12 chart-col">
             <div class="boxed-container chart-container chart-container-table">
