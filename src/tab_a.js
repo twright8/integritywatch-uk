@@ -1188,23 +1188,3 @@ window.addEventListener('resize', toggleDropup);
 // Initial check on page load
 window.addEventListener('DOMContentLoaded', toggleDropup);
 
-document.addEventListener('DOMContentLoaded', function () {
-    var popup = document.getElementById('popup');
-    var close = document.querySelector('.close');
-
-    // Check if the visitor has already visited
-    if (document.cookie.indexOf('visited=true') === -1) {
-        // Show the popup if no 'visited' cookie found
-        popup.style.display = 'flex';
-
-        // Set a cookie for 30 days
-        var expiry = new Date();
-        expiry.setTime(expiry.getTime() + (60*60*1000));
-        document.cookie = "visited=true; expires=" + expiry.toUTCString() + "; path=/";
-    }
-
-    // Close the popup and prevent it from showing again on refresh
-    close.onclick = function() {
-        popup.style.display = 'none';
-    };
-});

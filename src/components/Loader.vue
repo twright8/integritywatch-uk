@@ -7,8 +7,11 @@
       <div class="loader"></div>
       <div class="loader-text below">
         Please wait a moment for the data to load ...
-		<h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
-		<p>This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament.</p>
+		<br>
+		-
+		<br>
+		<h1 id="title">Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
+		<p id="underlay">This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament.</p>
       </div>
     </div>
   </div>
@@ -24,6 +27,42 @@ export default {
 </script>
 
 <style scoped lang="scss">
+#title {
+  font-family: Montserrat, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #2C3E50;
+}
+
+#underlay {
+  font-family: Montserrat, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C3E50;
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) { /* Tablet and mobile devices */
+  #title {
+    font-size: 20px;
+  }
+
+  #underlay {
+    font-size: 16px;
+  }
+  .loader-container{width:90%!important}
+}
+
+@media (max-width: 480px) { /* Mobile devices */
+  #title {
+    font-size: 18px;
+  }
+
+  #underlay {
+    font-size: 14px;
+  }
+}
+
 .overlay {
   background-color: rgba(255, 255, 255, 0.9);
   z-index: 10001;

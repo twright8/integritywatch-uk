@@ -1223,34 +1223,4 @@ margin-left:10px;
 display:block;
 }}
 
-/* Popup styling */
-.popup {
-    position: fixed;
-    left: 0;
-    top: 0;
-    background-color: rgba(0,0,0,0.95);
-
-    display: none; /* Hidden by default */
-    justify-content: center;
-    align-items: center;
-	z-index: 99999;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-}
-
-.popup-content {
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.close {
-    cursor: pointer;
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    font-size: 25px;
-}
-
 
