@@ -7,6 +7,8 @@
       <div class="loader"></div>
       <div class="loader-text below">
         Please wait a moment for the data to load ...
+		<h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
+		<p>This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament.</p>
       </div>
     </div>
   </div>

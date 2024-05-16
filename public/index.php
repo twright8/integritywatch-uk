@@ -21,18 +21,7 @@
     <link rel="stylesheet" href="static/tab_a.css">
 </head>
 <body>
-	  <div id="popup" class="popup ">
-    <div class="popup-content description-container">
-        <span class="close" style="cursor: pointer;">&times;</span>
-                          <h1>Open Access UK: monitor lobbying meetings across Whitehall and Holyrood</h1>
-                  <p>
-                    
-This is a user-friendly interactive database that provides a unique overview of lobby meetings with hosts in the UK Government, Scottish Government, and Scottish Parliament. 
 
-                    <a href="about.php">Read more</a>.
-                  </p> 
-    </div>
-</div>
     <div id="app" class="tabA">   
       <?php include 'header.php' ?>
 
