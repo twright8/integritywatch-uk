@@ -276,7 +276,7 @@ for ( var i = 0; i < 5; i++ ) {
 //Load data and generate charts
 var lobbyist_typeList = {}
 
-fetch('./data/iw_uk.json?' + randomPar)
+fetch('./data/iw_uk.json.gz?' + randomPar)
   .then(response => {
     if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -451,7 +451,8 @@ function applyFilters() {
     tagDimension.filterAll();
   } else {
     tagDimension.filter(function(d) {
-      return activeTagFilters.includes(d);
+        const tags = d.split(', ');
+		return activeTagFilters.some(filter => tags.includes(filter));
     });
   }
 dc.redrawAll();
@@ -500,12 +501,11 @@ initializeButton('filter-source-button-uk', 'UK Government');
 
 const filterIcons = {
   Climate: 'leaf',
-  "Financial Services": 'piggy-bank',
   Health: 'heart-pulse',
   Housing: 'house',
   Defence: 'shield-halved',
 };
-const filters = ['Climate', 'Financial Services', 'Health', 'Housing', 'Defence'];
+const filters = ['Climate', 'Health', 'Housing', 'Defence'];
 
 filters.forEach(filter => {
   const button = document.createElement('button');
