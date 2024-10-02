@@ -40,7 +40,9 @@ Open Access UK includes a range of functions, allowing users to:
 <li> share links to specific meetings on social media</li>
 <li> submit pre-populated freedom of information requests via  WhatDoTheyKnow.com</li><br>
 
-                <p>The tool does not currently include meetings with UK Government ministers’ special advisers or senior civil servants, or data from the UK statutory register of lobbyists. If you would like to fund us to collect this data then please <a href="http://www.transparency.org.uk/who-we-are/contact-us/#.WsyhqC7waUk">contact us</a>.</p><p>We used GIST embeddings (<a href="https://arxiv.org/abs/2402.16829">arXiv:2402.16829</a>), a Large Language Model (LLM) AI, alongside SetFit (<a href= "https://arxiv.org/abs/2209.11055">arXiv:2209.11055</a>), to train the AI on the topics of lobbying meetings. This fine-tuned model is then applied to newly released meetings data to categorise it. Although this method has very high accuracy, the non-supervised approach may occasionally result in false positives and false negatives.</p>
+                <p>We use cutting-edge AI based large language models to automatically categorise lobbying meetings. Our system analyses the meeting descriptions, hosts, and lobbyists to determine what each meeting is about. We currently use four categories: Health, Housing, Defence and Climate.
+To make this work, we first taught our model using 2,000 real lobbying meetings that were manually labeled by our team. This training helps the AI understand the nuances of lobbying language and topics.
+Now, whenever new meeting data is released, our AI can quickly sort through it and categorize each meeting. This approach is highly accurate, but like any AI system, it might occasionally misclassify a meeting.</p>
               </div>
             </div>
           </div>
